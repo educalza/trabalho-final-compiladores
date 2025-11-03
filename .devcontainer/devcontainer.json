@@ -1,0 +1,25 @@
+{
+  "name": "Dart C-Subset Compiler",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+      },
+      "extensions": [
+        "dart-code.dart-code",
+        "antlrv4.vscode-antlr4"
+      ]
+    }
+  },
+  // Mapeia a porta para um futuro depurador ou servidor web, se necessário
+  "forwardPorts": [],
+  
+  // Comando a ser executado após a criação do container
+  "postCreateCommand": "dart pub get",
+
+  // Garante que o VSCode rode como root (ou o usuário que você preferir)
+  "remoteUser": "root"
+}

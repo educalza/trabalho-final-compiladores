@@ -1,0 +1,6 @@
+include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    # Você pode adicionar ou remover regras de lint aqui
+    - prefer_const_constructors

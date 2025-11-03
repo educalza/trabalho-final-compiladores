@@ -1,0 +1,17 @@
+# Dart/Flutter
+.dart_tool/
+.packages
+build/
+*.dart.js
+*.part.js
+*.web.dill
+*.web.map
+
+# Arquivos gerados pelo ANTLR
+lib/src/generated/
+
+# VSCode
+.vscode/
+
+# Build outputs
+*.exe
