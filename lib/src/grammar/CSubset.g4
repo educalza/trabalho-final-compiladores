@@ -18,7 +18,7 @@ varDecl
     ;
 
 varDeclarator
-    : ID ('[' INT ']')?
+    : ID ('[' INT ']')? ('=' expression)?
     ;
 
 // Declaração de Função: tipo nome(params) { corpo }
@@ -54,10 +54,38 @@ statement
     | ifStmt                # ifStatement
     | whileStmt             # whileStatement
     | returnStmt            # returnStatement
-    | assignment ';'        # assignStatement
-    | functionCall ';'      # funcCallStatement
+    | expression ';'        # exprStatement
+    | switchStmt            # switchStatement
+    | forStmt               # forStatement
+    | doWhileStmt           # doWhileStatement
+    | breakStmt             # breakStatement
     | block                 # blockStatement
     | ';'                   # emptyStatement
+    ;
+
+switchStmt
+    : SWITCH '(' expression ')' '{' switchBlock '}'
+    ;
+
+switchBlock
+    : (caseLabel statement*)*
+    ;
+
+caseLabel
+    : CASE expression ':'   # caseStmt
+    | DEFAULT ':'           # defaultStmt
+    ;
+
+forStmt
+    : FOR '(' (varDecl | expression ';' | ';') expression? ';' expression? ')' statement
+    ;
+
+breakStmt
+    : BREAK ';'
+    ;
+
+returnStmt
+    : 'return' expression? ';'
     ;
 
 ifStmt
@@ -68,12 +96,8 @@ whileStmt
     : 'while' '(' expression ')' statement
     ;
 
-returnStmt
-    : 'return' expression? ';'
-    ;
-
-assignment
-    : ID ('[' expression ']')? '=' expression
+doWhileStmt
+    : DO statement WHILE '(' expression ')' ';'
     ;
 
 functionCall
@@ -94,6 +118,7 @@ expression
     | expression op=('+' | '-') expression      # addSubExpr
     | expression op=('<' | '>' | '<=' | '>=') expression # relExpr
     | expression op=('==' | '!=') expression    # eqExpr
+    | <assoc=right> expression '=' expression   # assignExpr
     | ID                                        # idExpr
     | INT                                       # intExpr
     | FLOAT                                     # floatExpr
@@ -111,6 +136,12 @@ INT_TYPE: 'int';
 FLOAT_TYPE: 'float';
 CHAR_TYPE : 'char';
 VOID_TYPE : 'void';
+SWITCH  : 'switch';
+CASE    : 'case';
+DEFAULT : 'default';
+FOR     : 'for';
+DO      : 'do';
+BREAK   : 'break';
 
 // Operadores
 PLUS    : '+';
@@ -126,6 +157,7 @@ LE      : '<=';
 GE      : '>=';
 COMMA   : ',';
 SEMI    : ';';
+COLON   : ':';
 LPAREN  : '(';
 RPAREN  : ')';
 LBRACE  : '{';

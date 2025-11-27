@@ -1,8 +1,22 @@
 import 'dart:io';
 import 'package:antlr4/antlr4.dart';
-import 'package:c_processor/c_processor.dart';
-
+import 'package:c_processor/src/generated/CSubsetLexer.dart';
+import 'package:c_processor/src/generated/CSubsetParser.dart';
 import 'package:c_processor/src/interpreter/interpreter.dart';
+import 'package:c_processor/src/semantic/semantic_analyzer.dart';
+
+class CustomErrorListener extends BaseErrorListener {
+  @override
+  void syntaxError(
+      Recognizer<dynamic> recognizer,
+      Object? offendingSymbol,
+      int? line,
+      int charPositionInLine,
+      String msg,
+      RecognitionException<dynamic>? e) {
+    print('Erro de sintaxe na linha $line:$charPositionInLine - $msg');
+  }
+}
 
 void main(List<String> arguments) async {
   if (arguments.isEmpty) {
@@ -26,9 +40,6 @@ void main(List<String> arguments) async {
     final tokens = CommonTokenStream(lexer);
     final parser = CSubsetParser(tokens);
 
-    // Adiciona listener de erro customizado se necessário, 
-    // mas o padrão já imprime no console.
-    
     final tree = parser.program();
 
     if (parser.numberOfSyntaxErrors > 0) {
@@ -43,6 +54,11 @@ void main(List<String> arguments) async {
     semanticAnalyzer.visit(tree);
 
     print('Análise semântica concluída com sucesso! Nenhum erro encontrado.');
+    
+    // Opcional: Executar o arquivo também?
+    // print('Executando...');
+    // final interpreter = Interpreter();
+    // interpreter.visit(tree);
 
   } catch (e) {
     print('Erro durante o processamento:');
@@ -71,28 +87,13 @@ Future<void> _runRepl() async {
       final tokens = CommonTokenStream(lexer);
       final parser = CSubsetParser(tokens);
       
-      // Tenta parsear como statement primeiro (declaração, if, etc)
-      // Mas nossa gramática exige que tudo esteja em função ou global?
-      // Vamos tentar parsear como 'statement' ou 'expression' diretamente.
-      // Precisamos expor essas regras no parser? Sim, elas são públicas.
-      
-      // Hack: Tenta parsear como statement. Se falhar, tenta expression.
-      // O ANTLR lança erro ou retorna árvore de erro?
-      
-      // Abordagem simplificada para REPL:
-      // Se termina com ';', é statement. Senão tenta expressão.
+      parser.removeErrorListeners();
+      parser.addErrorListener(CustomErrorListener());
       
       ParseTree tree;
       bool isExpression = false;
       
-      parser.removeErrorListeners(); // Remove console listener padrão
-      // parser.addErrorListener(...); // Poderíamos adicionar um customizado
-      
-      if (line.trim().endsWith(';') || line.contains('int ') || line.contains('float ')) {
-         // Tenta statement ou declaração
-         // O parser espera 'program' (lista de decls).
-         // Vamos tentar 'statement' direto se a gramática permitir.
-         // A regra 'statement' existe.
+      if (line.trim().endsWith(';') || line.contains('int ') || line.contains('float ') || line.contains('if') || line.contains('while') || line.contains('switch') || line.contains('for') || line.contains('break')) {
          tree = parser.statement();
       } else {
          tree = parser.expression();
@@ -100,16 +101,16 @@ Future<void> _runRepl() async {
       }
       
       if (parser.numberOfSyntaxErrors > 0) {
-        print('Erro de sintaxe.');
+        // Erro já impresso pelo listener
         continue;
       }
 
-      // Validação Semântica (Tipagem Forte)
+      // Validação Semântica
       try {
         semanticAnalyzer.visit(tree);
       } catch (e) {
-        print(e); // Exibe erro semântico (ex: tipo incompatível)
-        continue; // Não executa se houver erro
+        print(e);
+        continue;
       }
 
       // Executa

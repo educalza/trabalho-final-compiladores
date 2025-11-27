@@ -5,9 +5,18 @@ import 'symbol_table.dart';
 
 class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   Scope currentScope;
+  int _loopOrSwitchDepth = 0; // Para validar break
 
   SemanticAnalyzer() : currentScope = Scope() {
-    // Define funções built-in se necessário (ex: print)
+    // Define funções built-in
+    // print aceita qualquer coisa, mas vamos definir como void print(string) para validação básica
+    // ou melhor, vamos tratar print como especial no visitFunctionCall
+    final printSymbol = FunctionSymbol('print', CType.voidType);
+    // Adiciona um parâmetro genérico ou deixa vazio e valida magicamente?
+    // Vamos adicionar um parâmetro 'any' (usando string como placeholder ou criando CType.any se necessário)
+    // Para simplificar: print aceita 1 argumento.
+    printSymbol.parameters.add(VarSymbol('arg', CType.string)); // Tipo dummy, validaremos dinamicamente
+    currentScope.define(printSymbol);
   }
 
   @override
@@ -63,23 +72,110 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   CType visitVarDecl(VarDeclContext ctx) {
     final typeName = ctx.typeSpecifier()!.text;
     final type = _getTypeFromText(typeName);
-
     for (var declarator in ctx.varDeclarators()) {
       final name = declarator.ID()!.text!;
       if (currentScope.isDefinedLocally(name)) {
         throw Exception("Erro Semântico: Variável '$name' já declarada neste escopo.");
       }
       
+      Symbol symbol;
       if (declarator.INT() != null) {
         // É um array
         final size = int.parse(declarator.INT()!.text!);
-        currentScope.define(ArraySymbol(name, type, size));
+        symbol = ArraySymbol(name, type, size);
+        currentScope.define(symbol);
       } else {
         // Variável normal
-        currentScope.define(VarSymbol(name, type));
+        symbol = VarSymbol(name, type);
+        currentScope.define(symbol);
+      }
+      
+      // Verifica inicialização
+      if (declarator.expression() != null) {
+         final initExpr = declarator.expression()!;
+         
+         if (symbol is ArraySymbol) {
+            // Inicialização de array: int arr[2] = {1, 2};
+            // O parser permite '=' expression. A expression deve ser ArrayLiteral.
+            if (initExpr is! ArrayLiteralContext) {
+               throw Exception("Erro Semântico: Array '$name' deve ser inicializado com lista {...}.");
+            }
+            // A validação do literal é feita visitando-o, mas precisamos validar compatibilidade com o array
+            // Podemos reutilizar a lógica de atribuição ou chamar visitArrayLiteral e checar tipo.
+            // Vamos simplificar chamando visit e checando compatibilidade.
+            
+            // Mas visitArrayLiteral retorna o tipo do elemento (ou void).
+            // Precisamos validar tamanho também.
+            
+            final literalSize = initExpr.expressions().length;
+            if (literalSize > symbol.size) {
+               throw Exception("Erro Semântico: Tamanho da lista ($literalSize) maior que o array '$name' (${symbol.size}).");
+            }
+            
+            final elementType = visit(initExpr) ?? CType.error;
+            if (!_areTypesCompatible(symbol.elementType, elementType)) {
+               throw Exception("Erro Semântico: Tipos incompatíveis na inicialização do array '$name'.");
+            }
+            
+         } else {
+            // Variável normal
+            final initType = visit(initExpr) ?? CType.error;
+            if (!_areTypesCompatible(type, initType)) {
+               throw Exception("Erro Semântico: Inicialização incompatível para '$name'. Esperado $type, recebido $initType.");
+            }
+         }
       }
     }
     return type;
+  }
+
+  @override
+  CType visitFunctionCall(FunctionCallContext ctx) {
+    final name = ctx.ID()!.text!;
+    
+    if (name == 'print') {
+       // Validação especial para print: aceita 1 argumento de qualquer tipo
+       if (ctx.argList() == null || ctx.argList()!.expressions().length != 1) {
+          throw Exception("Erro Semântico: 'print' espera exatamente 1 argumento.");
+       }
+       visit(ctx.argList()!.expression(0)!);
+       return CType.voidType;
+    }
+    
+    if (name == 'puts') {
+       if (ctx.argList() == null || ctx.argList()!.expressions().length != 1) {
+          throw Exception("Erro Semântico: 'puts' espera exatamente 1 argumento.");
+       }
+       final argType = visit(ctx.argList()!.expression(0)!);
+       if (argType != CType.string) {
+          throw Exception("Erro Semântico: 'puts' espera uma string.");
+       }
+       return CType.voidType;
+    }
+    
+    if (name == 'gets') {
+       if (ctx.argList() != null && ctx.argList()!.expressions().isNotEmpty) {
+          throw Exception("Erro Semântico: 'gets' não aceita argumentos.");
+       }
+       return CType.string;
+    }
+
+    final symbol = currentScope.resolve(name);
+    if (symbol == null) {
+      throw Exception("Erro Semântico: Função '$name' não declarada.");
+    }
+    if (symbol is! FunctionSymbol) {
+      throw Exception("Erro Semântico: '$name' não é uma função.");
+    }
+    
+    // Validação de argumentos para funções normais (futuro)
+    return symbol.type;
+  }
+
+  @override
+  CType visitExprStatement(ExprStatementContext ctx) {
+    visit(ctx.expression()!);
+    return CType.voidType;
   }
 
   @override
@@ -109,80 +205,97 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   }
 
   @override
-  CType visitAssignment(AssignmentContext ctx) {
-    final name = ctx.ID()!.text!;
-    final symbol = currentScope.resolve(name);
-
-    if (symbol == null) {
-      throw Exception("Erro Semântico: Variável '$name' não declarada.");
-    }
-
-    // Verifica se é atribuição de array
-    if (ctx.LBRACKET() != null) { 
-      // ID '[' expr ']' '=' expr 
-      // ID '[' expr ']' '=' expr
-      // ctx.expression(0) é o índice
-      // ctx.expression(1) é o valor
-      
-      if (symbol is! ArraySymbol) {
-        throw Exception("Erro Semântico: '$name' não é um array.");
-      }
-      
-      final indexType = visit(ctx.expression(0)!) ?? CType.error;
-      if (indexType != CType.int) {
-        throw Exception("Erro Semântico: Índice de array deve ser inteiro.");
-      }
-      
-      final valueType = visit(ctx.expression(1)!) ?? CType.error;
-      if (!_areTypesCompatible(symbol.elementType, valueType)) {
-         throw Exception("Erro Semântico: Atribuição incompatível para elemento de '$name'.");
-      }
-      return symbol.elementType;
-    } else {
-      // Atribuição normal: ID '=' expr
-      final rightExpr = ctx.expression(0)!;
-      
-      // Verifica se é literal de array: ID = { ... }
-      if (rightExpr is ArrayLiteralContext) {
-         if (symbol is! ArraySymbol) {
-           throw Exception("Erro Semântico: Não é possível atribuir uma lista a uma variável não-array.");
-         }
-         
-         // Valida tipos dos elementos do literal
-         final elementType = visit(rightExpr) ?? CType.error;
-         if (!_areTypesCompatible(symbol.elementType, elementType)) {
-            throw Exception("Erro Semântico: Tipos dos elementos da lista incompatíveis com array '$name'.");
-         }
-         
-         // Valida tamanho
-         final literalSize = rightExpr.expressions().length;
-         if (literalSize > symbol.size) {
-            throw Exception("Erro Semântico: Tamanho da lista ($literalSize) maior que o array '$name' (${symbol.size}).");
-         }
-         
-         return symbol.elementType;
-      }
-      
-      if (symbol is ArraySymbol) {
-        throw Exception("Erro Semântico: Não é possível atribuir a um array inteiro (use índice ou lista {...}).");
-      }
-      // ... resto da lógica normal ...
-    }
-
-    if (symbol == null) {
-      throw Exception("Erro Semântico: Variável '$name' não declarada.");
-    }
-    if (symbol is! VarSymbol) {
-      throw Exception("Erro Semântico: '$name' não é uma variável.");
-    }
-
-    final exprType = visit(ctx.expression(0)!) ?? CType.error;
+  CType visitAssignExpr(AssignExprContext ctx) {
+    // Lado esquerdo deve ser ID ou ArrayAccess
+    // Como expression é recursiva, precisamos checar o tipo do contexto do lado esquerdo.
+    // ctx.expression(0) é o lado esquerdo.
     
-    if (!_areTypesCompatible(symbol.type, exprType)) {
-      throw Exception("Erro Semântico: Atribuição incompatível para '$name'. Esperado ${symbol.type}, recebido $exprType.");
+    final leftExpr = ctx.expression(0)!;
+    final rightExpr = ctx.expression(1)!;
+    
+    Symbol? symbol;
+    CType targetType = CType.error;
+    
+    if (leftExpr is IdExprContext) {
+       final name = leftExpr.ID()!.text!;
+       symbol = currentScope.resolve(name);
+       if (symbol == null) {
+          throw Exception("Erro Semântico: Variável '$name' não declarada.");
+       }
+       if (symbol is! VarSymbol) {
+          throw Exception("Erro Semântico: '$name' não é uma variável.");
+       }
+       // Se for array sem índice, erro (exceto se right for array literal, mas array literal não é expression normal)
+       // ArrayLiteral é expression, então ok.
+       
+       if (symbol is ArraySymbol) {
+          // Atribuição direta a array só permitida se right for ArrayLiteral
+          if (rightExpr is ArrayLiteralContext) {
+             // Validação de literal já feita no visitArrayLiteral?
+             // Não, visitArrayLiteral retorna tipo do elemento.
+             // Precisamos validar tamanho e tipo aqui.
+             
+             final literalSize = rightExpr.expressions().length;
+             if (literalSize > symbol.size) {
+                throw Exception("Erro Semântico: Tamanho da lista ($literalSize) maior que o array '$name' (${symbol.size}).");
+             }
+             
+             final elementType = visit(rightExpr) ?? CType.error;
+             if (!_areTypesCompatible(symbol.elementType, elementType)) {
+                throw Exception("Erro Semântico: Tipos incompatíveis na inicialização do array '$name'.");
+             }
+             return symbol.elementType; // Retorna tipo do elemento? Ou void? Em C, array assignment não é expression válida padrão, mas aqui permitimos init.
+             // Mas espere, C não permite 'arr = {1,2}' depois da declaração.
+             // Vamos permitir? O usuário pediu "inicialização de array".
+             // Se for assignment normal, C não permite.
+             // Mas nossa gramática permite. Vamos permitir por conveniência?
+             // Sim.
+          } else {
+             throw Exception("Erro Semântico: Não é possível atribuir a um array inteiro (use índice).");
+          }
+       }
+       
+       targetType = symbol.type;
+       
+    } else if (leftExpr is ArrayAccessExprContext) {
+       // Valida o array access
+       targetType = visit(leftExpr) ?? CType.error;
+       // visitArrayAccessExpr já valida se é array e índice int.
+    } else {
+       throw Exception("Erro Semântico: Lado esquerdo da atribuição deve ser uma variável ou elemento de array.");
     }
+    
+    final valueType = visit(rightExpr) ?? CType.error;
+    
+    if (!_areTypesCompatible(targetType, valueType)) {
+       throw Exception("Erro Semântico: Atribuição incompatível. Esperado $targetType, recebido $valueType.");
+    }
+    
+    return targetType;
+  }
 
-    return symbol.type;
+  @override
+  CType visitArrayAccessExpr(ArrayAccessExprContext ctx) {
+    final leftExpr = ctx.expression(0)!;
+    // Simplificação: assume ID
+    if (leftExpr is! IdExprContext) throw Exception("Erro Semântico: Acesso complexo não suportado.");
+    
+    final name = (leftExpr as IdExprContext).ID()!.text!;
+    final symbol = currentScope.resolve(name);
+    
+    if (symbol == null) {
+       throw Exception("Erro Semântico: Array '$name' não declarado.");
+    }
+    if (symbol is! ArraySymbol) {
+       throw Exception("Erro Semântico: '$name' não é um array.");
+    }
+    
+    final indexType = visit(ctx.expression(1)!) ?? CType.error;
+    if (indexType != CType.int) {
+       throw Exception("Erro Semântico: Índice deve ser inteiro.");
+    }
+    
+    return symbol.elementType;
   }
 
   @override
@@ -247,6 +360,177 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
     final left = visit(ctx.expression(0)!) ?? CType.error;
     final right = visit(ctx.expression(1)!) ?? CType.error;
     return _getResultingType(left, right);
+  }
+
+  @override
+  CType visitRelExpr(RelExprContext ctx) {
+    final left = visit(ctx.expression(0)!) ?? CType.error;
+    final right = visit(ctx.expression(1)!) ?? CType.error;
+    
+    if (!_areTypesCompatible(left, right) && !_areTypesCompatible(right, left)) {
+       // Permite int vs float
+       if (!((left == CType.int || left == CType.float) && (right == CType.int || right == CType.float))) {
+          throw Exception("Erro Semântico: Operandos de comparação devem ser numéricos.");
+       }
+    }
+    return CType.int; // Representa boolean (0 ou 1)
+  }
+
+  @override
+  CType visitEqExpr(EqExprContext ctx) {
+    final left = visit(ctx.expression(0)!) ?? CType.error;
+    final right = visit(ctx.expression(1)!) ?? CType.error;
+    
+    if (!_areTypesCompatible(left, right) && !_areTypesCompatible(right, left)) {
+       throw Exception("Erro Semântico: Tipos incompatíveis para igualdade.");
+    }
+    return CType.int; // Representa boolean
+  }
+
+  @override
+  CType visitIfStmt(IfStmtContext ctx) {
+    final conditionType = visit(ctx.expression()!) ?? CType.error;
+    if (conditionType != CType.int && conditionType != CType.float) {
+       throw Exception("Erro Semântico: Condição do IF deve ser numérica (int ou float).");
+    }
+    
+    visit(ctx.statement(0)!);
+    if (ctx.statement(1) != null) {
+       visit(ctx.statement(1)!);
+    }
+    return CType.voidType;
+  }
+
+  @override
+  CType visitWhileStmt(WhileStmtContext ctx) {
+    final conditionType = visit(ctx.expression()!) ?? CType.error;
+    if (conditionType != CType.int && conditionType != CType.float) {
+       throw Exception("Erro Semântico: Condição do WHILE deve ser numérica.");
+    }
+    visit(ctx.statement()!);
+    return CType.voidType;
+  }
+
+  @override
+  CType visitDoWhileStmt(DoWhileStmtContext ctx) {
+    _loopOrSwitchDepth++;
+    try {
+       visit(ctx.statement()!);
+    } finally {
+       _loopOrSwitchDepth--;
+    }
+    
+    final conditionType = visit(ctx.expression()!) ?? CType.error;
+    if (conditionType != CType.int && conditionType != CType.float) {
+       throw Exception("Erro Semântico: Condição do DO-WHILE deve ser numérica.");
+    }
+    
+    return CType.voidType;
+  }
+
+  @override
+  CType visitSwitchStmt(SwitchStmtContext ctx) {
+    final exprType = visit(ctx.expression()!) ?? CType.error;
+    if (exprType != CType.int && exprType != CType.char) {
+       throw Exception("Erro Semântico: Expressão do switch deve ser int ou char.");
+    }
+    
+    _loopOrSwitchDepth++;
+    try {
+       // Visita o bloco do switch manualmente para validar os cases
+       // A gramática define switchBlock como lista de (caseLabel statement*)
+       // Mas o parser gera switchBlockContext.
+       // Vamos visitar o switchBlock.
+       visit(ctx.switchBlock()!);
+    } finally {
+       _loopOrSwitchDepth--;
+    }
+    return CType.voidType;
+  }
+  
+  @override
+  CType visitSwitchBlock(SwitchBlockContext ctx) {
+     // O switchBlock contém filhos que são CaseStmt ou DefaultStmt (via caseLabel) e statements.
+     // Precisamos iterar sobre os filhos.
+     // Mas a regra é: switchBlock : (caseLabel statement*)*
+     // O ANTLR gera métodos para acessar caseLabel() e statement().
+     // Vamos simplificar: visitar todos os filhos.
+     
+     for (var i = 0; i < ctx.childCount; i++) {
+        visit(ctx.getChild(i)!);
+     }
+     return CType.voidType;
+  }
+  
+  @override
+  CType visitCaseStmt(CaseStmtContext ctx) {
+     final exprType = visit(ctx.expression()!) ?? CType.error;
+     // Idealmente verificar se é constante e compatível com o switch, mas aqui só validamos tipo básico
+     if (exprType != CType.int && exprType != CType.char) {
+        throw Exception("Erro Semântico: Case deve ser int ou char.");
+     }
+     return CType.voidType;
+  }
+  
+  @override
+  CType visitDefaultStmt(DefaultStmtContext ctx) {
+     return CType.voidType;
+  }
+
+  @override
+  CType visitForStmt(ForStmtContext ctx) {
+    final previousScope = currentScope;
+    currentScope = Scope(previousScope); // Escopo para init
+    // print("DEBUG: Criado escopo ${currentScope.hashCode} para FOR (pai: ${previousScope.hashCode})");
+    
+    try {
+       // Implementação robusta baseada em iteração de filhos para identificar partes do FOR
+       
+       // Primeiro, tratar Init se for VarDecl (pois VarDecl não é ExpressionContext)
+       if (ctx.varDecl() != null) {
+          visit(ctx.varDecl()!);
+       }
+       
+       int semiCount = 0;
+       for (var child in ctx.children!) {
+          if (child.text == ';') {
+             semiCount++;
+          } else if (child is ExpressionContext) {
+             if (semiCount == 0) {
+                // Init expression (se não for varDecl)
+                if (ctx.varDecl() == null) visit(child);
+             } else if (semiCount == 1) {
+                // Condition
+                final condType = visit(child) ?? CType.error;
+                if (condType != CType.int && condType != CType.float) {
+                   throw Exception("Erro Semântico: Condição do FOR deve ser numérica.");
+                }
+             } else if (semiCount == 2) {
+                // Update
+                visit(child);
+             }
+          }
+       }
+       
+       _loopOrSwitchDepth++;
+       try {
+          visit(ctx.statement()!);
+       } finally {
+          _loopOrSwitchDepth--;
+       }
+       
+    } finally {
+       currentScope = previousScope;
+    }
+    return CType.voidType;
+  }
+  
+  @override
+  CType visitBreakStmt(BreakStmtContext ctx) {
+     if (_loopOrSwitchDepth <= 0) {
+        throw Exception("Erro Semântico: 'break' fora de loop ou switch.");
+     }
+     return CType.voidType;
   }
 
   CType _getTypeFromText(String text) {
