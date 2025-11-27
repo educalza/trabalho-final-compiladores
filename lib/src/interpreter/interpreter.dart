@@ -6,6 +6,11 @@ import 'environment.dart';
 
 class BreakException implements Exception {}
 
+class ReturnException implements Exception {
+  final dynamic value;
+  ReturnException(this.value);
+}
+
 class Interpreter extends CSubsetBaseVisitor<dynamic> {
   Environment environment;
 
@@ -82,12 +87,14 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
           visit(function.block()!);
           
        } catch (e) {
-          // TODO: Tratar retorno (return statement)
+          if (e is ReturnException) {
+             return e.value;
+          }
           rethrow;
        } finally {
           environment = previousEnv;
        }
-       return null; // TODO: Suporte a valor de retorno
+       return null; // Retorno padrão se não houver return explícito
     }
     
     throw Exception("Erro de Execução: '$name' não é uma função.");
@@ -266,7 +273,44 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
 
     if (op == '*') return left * right;
     if (op == '/') return left / right;
+    if (op == '%') return (left as num).toInt() % (right as num).toInt();
     return null;
+  }
+
+  @override
+  dynamic visitLogicAndExpr(LogicAndExprContext ctx) {
+    // Short-circuit
+    final left = visit(ctx.expression(0)!);
+    bool leftTrue = false;
+    if (left is bool) leftTrue = left;
+    if (left is num) leftTrue = left != 0;
+    
+    if (!leftTrue) return 0; // Falso
+    
+    final right = visit(ctx.expression(1)!);
+    bool rightTrue = false;
+    if (right is bool) rightTrue = right;
+    if (right is num) rightTrue = right != 0;
+    
+    return rightTrue ? 1 : 0;
+  }
+
+  @override
+  dynamic visitLogicOrExpr(LogicOrExprContext ctx) {
+    // Short-circuit
+    final left = visit(ctx.expression(0)!);
+    bool leftTrue = false;
+    if (left is bool) leftTrue = left;
+    if (left is num) leftTrue = left != 0;
+    
+    if (leftTrue) return 1; // Verdadeiro
+    
+    final right = visit(ctx.expression(1)!);
+    bool rightTrue = false;
+    if (right is bool) rightTrue = right;
+    if (right is num) rightTrue = right != 0;
+    
+    return rightTrue ? 1 : 0;
   }
 
   @override
@@ -425,6 +469,15 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
     return null;
   }
   
+  @override
+  dynamic visitReturnStmt(ReturnStmtContext ctx) {
+    dynamic value;
+    if (ctx.expression() != null) {
+       value = visit(ctx.expression()!);
+    }
+    throw ReturnException(value);
+  }
+
   @override
   dynamic visitBreakStmt(BreakStmtContext ctx) {
      throw BreakException();

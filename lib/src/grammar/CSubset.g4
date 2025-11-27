@@ -114,10 +114,12 @@ expression
     | functionCall                              # callExpr
     | expression '[' expression ']'             # arrayAccessExpr
     | '{' expression (',' expression)* '}'      # arrayLiteral
-    | expression op=('*' | '/') expression      # mulDivExpr
+    | expression op=('*' | '/' | '%') expression # mulDivExpr
     | expression op=('+' | '-') expression      # addSubExpr
     | expression op=('<' | '>' | '<=' | '>=') expression # relExpr
     | expression op=('==' | '!=') expression    # eqExpr
+    | expression op='&&' expression             # logicAndExpr
+    | expression op='||' expression             # logicOrExpr
     | <assoc=right> expression '=' expression   # assignExpr
     | ID                                        # idExpr
     | INT                                       # intExpr
@@ -148,6 +150,7 @@ PLUS    : '+';
 MINUS   : '-';
 MULT    : '*';
 DIV     : '/';
+MOD     : '%';
 ASSIGN  : '=';
 EQ      : '==';
 NEQ     : '!=';
@@ -155,6 +158,8 @@ LT      : '<';
 GT      : '>';
 LE      : '<=';
 GE      : '>=';
+AND     : '&&';
+OR      : '||';
 COMMA   : ',';
 SEMI    : ';';
 COLON   : ':';

@@ -5,6 +5,7 @@ import 'symbol_table.dart';
 
 class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   Scope currentScope;
+  CType? _currentFunctionReturnType;
   int _loopOrSwitchDepth = 0; // Para validar break
 
   SemanticAnalyzer() : currentScope = Scope() {
@@ -60,7 +61,12 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
     }
 
     // Visita o corpo da função
+    final previousReturnType = _currentFunctionReturnType;
+    _currentFunctionReturnType = returnType;
+    
     visit(ctx.block()!);
+    
+    _currentFunctionReturnType = previousReturnType;
 
     // Restaura escopo anterior
     currentScope = previousScope;
@@ -168,14 +174,24 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
       throw Exception("Erro Semântico: '$name' não é uma função.");
     }
     
-    // Validação de argumentos para funções normais (futuro)
+    // Validação de argumentos
+    final params = symbol.parameters;
+    final args = ctx.argList()?.expressions() ?? [];
+    
+    if (params.length != args.length) {
+       throw Exception("Erro Semântico: Função '$name' espera ${params.length} argumentos, mas recebeu ${args.length}.");
+    }
+    
+    for (int i = 0; i < params.length; i++) {
+       final argType = visit(args[i]) ?? CType.error;
+       final paramType = params[i].type;
+       
+       if (!_areTypesCompatible(paramType, argType)) {
+          throw Exception("Erro Semântico: Argumento ${i+1} de '$name' incompatível. Esperado $paramType, recebido $argType.");
+       }
+    }
+    
     return symbol.type;
-  }
-
-  @override
-  CType visitExprStatement(ExprStatementContext ctx) {
-    visit(ctx.expression()!);
-    return CType.voidType;
   }
 
   @override
@@ -359,7 +375,38 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   CType visitMulDivExpr(MulDivExprContext ctx) {
     final left = visit(ctx.expression(0)!) ?? CType.error;
     final right = visit(ctx.expression(1)!) ?? CType.error;
+    final op = ctx.op!.text!;
+    
+    if (op == '%') {
+       if (left != CType.int || right != CType.int) {
+          throw Exception("Erro Semântico: Operador '%' requer operandos inteiros.");
+       }
+       return CType.int;
+    }
+    
     return _getResultingType(left, right);
+  }
+
+  @override
+  CType visitLogicAndExpr(LogicAndExprContext ctx) {
+    final left = visit(ctx.expression(0)!) ?? CType.error;
+    final right = visit(ctx.expression(1)!) ?? CType.error;
+    
+    if (!_isNumeric(left) || !_isNumeric(right)) {
+       throw Exception("Erro Semântico: Operandos lógicos devem ser numéricos.");
+    }
+    return CType.int;
+  }
+
+  @override
+  CType visitLogicOrExpr(LogicOrExprContext ctx) {
+    final left = visit(ctx.expression(0)!) ?? CType.error;
+    final right = visit(ctx.expression(1)!) ?? CType.error;
+    
+    if (!_isNumeric(left) || !_isNumeric(right)) {
+       throw Exception("Erro Semântico: Operandos lógicos devem ser numéricos.");
+    }
+    return CType.int;
   }
 
   @override
@@ -526,6 +573,31 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   }
   
   @override
+  CType visitReturnStmt(ReturnStmtContext ctx) {
+    CType returnType = CType.voidType;
+    if (ctx.expression() != null) {
+       returnType = visit(ctx.expression()!) ?? CType.error;
+    }
+    
+    if (_currentFunctionReturnType == null) {
+       // Return fora de função? (Na main ou global)
+       // Vamos assumir que main é void ou int, mas o parser garante que estamos dentro de função?
+       // Não necessariamente. Mas nossa estrutura de visitação sim.
+       // Se estivermos no nível global (visitProgram), não deveríamos encontrar returnStmt solto fora de função se a gramática não permitir.
+       // A gramática diz: program : declaration*. declaration : varDecl | functionDecl.
+       // Statements só existem dentro de block, que está dentro de functionDecl.
+       // Então _currentFunctionReturnType deve estar setado se visitarmos corretamente.
+       // Mas cuidado com blocos aninhados.
+    }
+    
+    if (!_areTypesCompatible(_currentFunctionReturnType ?? CType.voidType, returnType)) {
+       throw Exception("Erro Semântico: Tipo de retorno incompatível. Esperado $_currentFunctionReturnType, recebido $returnType.");
+    }
+    
+    return CType.voidType;
+  }
+
+  @override
   CType visitBreakStmt(BreakStmtContext ctx) {
      if (_loopOrSwitchDepth <= 0) {
         throw Exception("Erro Semântico: 'break' fora de loop ou switch.");
@@ -555,5 +627,9 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
     if (t1 == CType.int && t2 == CType.int) return CType.int;
     if (t1 == CType.string && t2 == CType.string) return CType.string; // Concatenação
     return CType.error;
+  }
+  
+  bool _isNumeric(CType type) {
+     return type == CType.int || type == CType.float;
   }
 }

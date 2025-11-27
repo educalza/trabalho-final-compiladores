@@ -35,7 +35,11 @@ void main(List<String> arguments) async {
   print('Processando $filePath...');
 
   try {
-    final input = await InputStream.fromPath(filePath);
+    // Pré-processamento
+    String code = await _preprocess(filePath);
+    // print("Código Pré-processado:\n$code"); // Debug
+
+    final input = InputStream.fromString(code);
     final lexer = CSubsetLexer(input);
     final tokens = CommonTokenStream(lexer);
     final parser = CSubsetParser(tokens);
@@ -55,10 +59,20 @@ void main(List<String> arguments) async {
 
     print('Análise semântica concluída com sucesso! Nenhum erro encontrado.');
     
-    // Opcional: Executar o arquivo também?
-    // print('Executando...');
-    // final interpreter = Interpreter();
-    // interpreter.visit(tree);
+    print('Executando...');
+    final interpreter = Interpreter();
+    interpreter.visit(tree); // Carrega funções
+    
+    // Invoca main()
+    try {
+       final callCode = "main();";
+       final callLexer = CSubsetLexer(InputStream.fromString(callCode));
+       final callParser = CSubsetParser(CommonTokenStream(callLexer));
+       final callTree = callParser.statement();
+       interpreter.visit(callTree);
+    } catch (e) {
+       print("Erro de Execução: $e");
+    }
 
   } catch (e) {
     print('Erro durante o processamento:');
@@ -124,4 +138,72 @@ Future<void> _runRepl() async {
       print('Erro: $e');
     }
   }
+}
+
+// Função de pré-processamento
+Future<String> _preprocess(String filePath, [Set<String>? visited, Map<String, String>? defines]) async {
+  visited ??= {};
+  defines ??= {};
+  
+  final file = File(filePath);
+  if (!await file.exists()) {
+     throw Exception("Arquivo não encontrado: $filePath");
+  }
+  
+  // Evita inclusão cíclica
+  final absolutePath = file.absolute.path;
+  if (visited.contains(absolutePath)) {
+     return ""; // Já incluído
+  }
+  visited.add(absolutePath);
+  
+  final lines = await file.readAsLines();
+  final processedLines = <String>[];
+  
+  for (var line in lines) {
+     final trimmed = line.trim();
+     
+     // #include "arquivo"
+     if (trimmed.startsWith('#include')) {
+        final match = RegExp(r'#include\s+"([^"]+)"').firstMatch(trimmed);
+        if (match != null) {
+           final includedPath = match.group(1)!;
+           // Resolve caminho relativo ao arquivo atual
+           final currentDir = file.parent.path;
+           final fullIncludedPath = "$currentDir/$includedPath"; // Simplificado
+           
+           // Passa os mesmos defines para o arquivo incluído
+           final includedContent = await _preprocess(fullIncludedPath, visited, defines);
+           processedLines.add(includedContent);
+        } else {
+           processedLines.add(line); // Include inválido ou <system>? Mantém.
+        }
+        continue;
+     }
+     
+     // #define KEY VALUE
+     if (trimmed.startsWith('#define')) {
+        final match = RegExp(r'#define\s+(\w+)\s+(.+)').firstMatch(trimmed);
+        if (match != null) {
+           final key = match.group(1)!;
+           final value = match.group(2)!.trim();
+           defines[key] = value;
+        }
+        // Remove a linha do define
+        processedLines.add(""); 
+        continue;
+     }
+     
+     // Substituição de defines
+     String processedLine = line;
+     defines.forEach((key, value) {
+        // Substituição simples (cuidado com substrings)
+        // Ideal: usar regex com word boundary \b
+        processedLine = processedLine.replaceAll(RegExp(r'\b' + key + r'\b'), value);
+     });
+     
+     processedLines.add(processedLine);
+  }
+  
+  return processedLines.join('\n');
 }
