@@ -6,27 +6,43 @@ import 'symbol_table.dart';
 class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   Scope currentScope;
   CType? _currentFunctionReturnType;
-  int _loopOrSwitchDepth = 0; // Para validar break
+  int _loopOrSwitchDepth = 0;
 
   SemanticAnalyzer() : currentScope = Scope() {
-    // Define funções built-in
-    // print aceita qualquer coisa, mas vamos definir como void print(string) para validação básica
-    // ou melhor, vamos tratar print como especial no visitFunctionCall
     final printSymbol = FunctionSymbol('print', CType.voidType);
-    // Adiciona um parâmetro genérico ou deixa vazio e valida magicamente?
-    // Vamos adicionar um parâmetro 'any' (usando string como placeholder ou criando CType.any se necessário)
-    // Para simplificar: print aceita 1 argumento.
-    printSymbol.parameters.add(VarSymbol('arg', CType.string)); // Tipo dummy, validaremos dinamicamente
+    printSymbol.parameters.add(VarSymbol('arg', CType.string));
     currentScope.define(printSymbol);
+    
+    final printfSymbol = FunctionSymbol('printf', CType.voidType);
+    printfSymbol.parameters.add(VarSymbol('format', CType.string));
+    currentScope.define(printfSymbol);
+    
+    final scanfSymbol = FunctionSymbol('scanf', CType.voidType);
+    scanfSymbol.parameters.add(VarSymbol('format', CType.string));
+    currentScope.define(scanfSymbol);
+    
+    final stoiSymbol = FunctionSymbol('stoi', CType.int);
+    stoiSymbol.parameters.add(VarSymbol('s', CType.string));
+    currentScope.define(stoiSymbol);
+    
+    final stofSymbol = FunctionSymbol('stof', CType.float);
+    stofSymbol.parameters.add(VarSymbol('s', CType.string));
+    currentScope.define(stofSymbol);
+    
+    final putsSymbol = FunctionSymbol('puts', CType.voidType);
+    putsSymbol.parameters.add(VarSymbol('s', CType.string));
+    currentScope.define(putsSymbol);
+
+    final getsSymbol = FunctionSymbol('gets', CType.string);
+    currentScope.define(getsSymbol);
   }
 
   @override
   CType visitProgram(ProgramContext ctx) {
-    // Visita todas as declarações no escopo global
     for (var decl in ctx.declarations()) {
       visit(decl);
     }
-    return CType.voidType; // Retorno dummy para o programa
+    return CType.voidType;
   }
 
   @override
@@ -35,7 +51,6 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
     final name = ctx.ID()!.text!;
     final returnType = _getTypeFromText(typeName);
 
-    // Verifica se função já existe
     if (currentScope.resolve(name) != null) {
       throw Exception("Erro Semântico: Função '$name' já declarada.");
     }
@@ -43,11 +58,9 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
     final functionSymbol = FunctionSymbol(name, returnType);
     currentScope.define(functionSymbol);
 
-    // Cria novo escopo para a função
     final previousScope = currentScope;
     currentScope = Scope(previousScope);
 
-    // Processa parâmetros
     final paramList = ctx.paramList();
     if (paramList != null) {
       for (var param in paramList.params()) {
@@ -60,24 +73,151 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
       }
     }
 
-    // Visita o corpo da função
     final previousReturnType = _currentFunctionReturnType;
     _currentFunctionReturnType = returnType;
     
-    visit(ctx.block()!);
+    visit((ctx as dynamic).block()!);
     
     _currentFunctionReturnType = previousReturnType;
 
-    // Restaura escopo anterior
     currentScope = previousScope;
 
     return returnType;
   }
 
   @override
+  CType visitStructDecl(StructDeclContext ctx) {
+    final name = ctx.ID()!.text!;
+    if (currentScope.resolve(name) != null) {
+       throw Exception("Erro Semântico: Struct '$name' já declarada.");
+    }
+    
+    final structSymbol = StructSymbol(name);
+    currentScope.define(structSymbol);
+    
+    final memberScope = Scope(currentScope);
+    final previousScope = currentScope;
+    currentScope = memberScope;
+    
+    try {
+       for (var decl in ctx.varDecls()) {
+          visit(decl);
+       }
+    } finally {
+       currentScope = previousScope;
+    }
+    
+    memberScope.symbols.forEach((memberName, symbol) {
+       if (symbol is VarSymbol) {
+          structSymbol.defineMember(symbol);
+       }
+    });
+    
+    return CType.voidType;
+  }
+
+  @override
+  CType visitUnionDecl(UnionDeclContext ctx) {
+    final name = ctx.ID()!.text!;
+    if (currentScope.resolve(name) != null) {
+       throw Exception("Erro Semântico: Union '$name' já declarada.");
+    }
+    
+    final unionSymbol = UnionSymbol(name);
+    currentScope.define(unionSymbol);
+    
+    final memberScope = Scope(currentScope);
+    final previousScope = currentScope;
+    currentScope = memberScope;
+    
+    try {
+       for (var decl in ctx.varDecls()) {
+          visit(decl);
+       }
+    } finally {
+       currentScope = previousScope;
+    }
+    
+    memberScope.symbols.forEach((memberName, symbol) {
+       if (symbol is VarSymbol) {
+          unionSymbol.defineMember(symbol);
+       }
+    });
+    
+    return CType.voidType;
+  }
+
+  @override
+  CType visitMemberAccessExpr(MemberAccessExprContext ctx) {
+     final leftExpr = ctx.expression()!;
+     final memberName = ctx.ID()!.text!;
+     
+     if (leftExpr is IdExprContext) {
+        final varName = leftExpr.ID()!.text!;
+        final symbol = currentScope.resolve(varName);
+        
+        if (symbol == null) throw Exception("Erro Semântico: '$varName' não declarado.");
+        if (symbol is! VarSymbol) throw Exception("Erro Semântico: '$varName' não é variável.");
+        
+        if (symbol.type != CType.structType && symbol.type != CType.unionType) {
+           throw Exception("Erro Semântico: '$varName' não é struct nem union.");
+        }
+        
+        final typeName = symbol.typeName!;
+        final typeSymbol = currentScope.resolve(typeName);
+        
+        if (typeSymbol == null) throw Exception("Erro Semântico: Tipo '$typeName' não definido.");
+        
+        VarSymbol? member;
+        if (typeSymbol is StructSymbol) {
+           member = typeSymbol.resolveMember(memberName);
+        } else if (typeSymbol is UnionSymbol) {
+           member = typeSymbol.resolveMember(memberName);
+        }
+        
+        if (member == null) {
+           throw Exception("Erro Semântico: Membro '$memberName' não existe em '$typeName'.");
+        }
+        
+        return member.type;
+     }
+     
+     throw Exception("Erro Semântico: Acesso a membro suportado apenas em variáveis diretas (ex: p.x).");
+  }
+
+  CType _getTypeFromContext(TypeSpecifierContext ctx) {
+    if (ctx is StructTypeContext) return CType.structType;
+    if (ctx is UnionTypeContext) return CType.unionType;
+    return _getTypeFromText(ctx.text);
+  }
+
+  @override
   CType visitVarDecl(VarDeclContext ctx) {
-    final typeName = ctx.typeSpecifier()!.text;
-    final type = _getTypeFromText(typeName);
+    final typeCtx = ctx.typeSpecifier()!;
+    final type = _getTypeFromContext(typeCtx);
+    String? typeName;
+    
+    if (type == CType.structType || type == CType.unionType) {
+       if (typeCtx is StructTypeContext) {
+          typeName = typeCtx.ID()!.text!;
+       } else if (typeCtx is UnionTypeContext) {
+          typeName = typeCtx.ID()!.text!;
+       } else {
+          throw Exception("Erro Interno: Contexto de tipo inválido para struct/union.");
+       }
+       
+       final typeSymbol = currentScope.resolve(typeName!);
+       if (typeSymbol == null) {
+          throw Exception("Erro Semântico: Tipo '$typeName' não definido.");
+       }
+       if (type == CType.structType && typeSymbol is! StructSymbol) {
+          throw Exception("Erro Semântico: '$typeName' não é uma struct.");
+       }
+       if (type == CType.unionType && typeSymbol is! UnionSymbol) {
+          throw Exception("Erro Semântico: '$typeName' não é uma union.");
+       }
+    }
+
     for (var declarator in ctx.varDeclarators()) {
       final name = declarator.ID()!.text!;
       if (currentScope.isDefinedLocally(name)) {
@@ -86,32 +226,23 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
       
       Symbol symbol;
       if (declarator.INT() != null) {
-        // É um array
         final size = int.parse(declarator.INT()!.text!);
         symbol = ArraySymbol(name, type, size);
         currentScope.define(symbol);
       } else {
-        // Variável normal
-        symbol = VarSymbol(name, type);
+        symbol = VarSymbol(name, type, typeName: typeName);
         currentScope.define(symbol);
       }
       
-      // Verifica inicialização
       if (declarator.expression() != null) {
+         if (type == CType.structType || type == CType.unionType) {
+            throw Exception("Erro Semântico: Inicialização de struct/union na declaração não suportada ainda.");
+         }
          final initExpr = declarator.expression()!;
-         
          if (symbol is ArraySymbol) {
-            // Inicialização de array: int arr[2] = {1, 2};
-            // O parser permite '=' expression. A expression deve ser ArrayLiteral.
             if (initExpr is! ArrayLiteralContext) {
                throw Exception("Erro Semântico: Array '$name' deve ser inicializado com lista {...}.");
             }
-            // A validação do literal é feita visitando-o, mas precisamos validar compatibilidade com o array
-            // Podemos reutilizar a lógica de atribuição ou chamar visitArrayLiteral e checar tipo.
-            // Vamos simplificar chamando visit e checando compatibilidade.
-            
-            // Mas visitArrayLiteral retorna o tipo do elemento (ou void).
-            // Precisamos validar tamanho também.
             
             final literalSize = initExpr.expressions().length;
             if (literalSize > symbol.size) {
@@ -124,10 +255,9 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
             }
             
          } else {
-            // Variável normal
             final initType = visit(initExpr) ?? CType.error;
             if (!_areTypesCompatible(type, initType)) {
-               throw Exception("Erro Semântico: Inicialização incompatível para '$name'. Esperado $type, recebido $initType.");
+               throw Exception("Erro Semântico: Inicialização incompatível para '$name'.");
             }
          }
       }
@@ -140,7 +270,6 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
     final name = ctx.ID()!.text!;
     
     if (name == 'print') {
-       // Validação especial para print: aceita 1 argumento de qualquer tipo
        if (ctx.argList() == null || ctx.argList()!.expressions().length != 1) {
           throw Exception("Erro Semântico: 'print' espera exatamente 1 argumento.");
        }
@@ -165,6 +294,50 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
        }
        return CType.string;
     }
+    
+    if (name == 'printf') {
+       if (ctx.argList() == null || ctx.argList()!.expressions().isEmpty) {
+          throw Exception("Erro Semântico: 'printf' requer pelo menos 1 argumento (formato).");
+       }
+       final formatType = visit(ctx.argList()!.expression(0)!);
+       if (formatType != CType.string) {
+          throw Exception("Erro Semântico: Primeiro argumento de 'printf' deve ser string.");
+       }
+       for (int i = 1; i < ctx.argList()!.expressions().length; i++) {
+          visit(ctx.argList()!.expression(i)!);
+       }
+       return CType.voidType;
+    }
+    
+    if (name == 'scanf') {
+       if (ctx.argList() == null || ctx.argList()!.expressions().length < 2) {
+          throw Exception("Erro Semântico: 'scanf' requer pelo menos 2 argumentos (formato e variável).");
+       }
+       final formatType = visit(ctx.argList()!.expression(0)!);
+       if (formatType != CType.string) {
+          throw Exception("Erro Semântico: Primeiro argumento de 'scanf' deve ser string.");
+       }
+       
+       final varExpr = ctx.argList()!.expression(1)!;
+       if (varExpr is! IdExprContext) {
+          throw Exception("Erro Semântico: Segundo argumento de 'scanf' deve ser uma variável.");
+       }
+       
+       visit(varExpr);
+       
+       return CType.voidType;
+    }
+    
+    if (name == 'stoi' || name == 'stof') {
+       if (ctx.argList() == null || ctx.argList()!.expressions().length != 1) {
+          throw Exception("Erro Semântico: '$name' espera exatamente 1 argumento.");
+       }
+       final argType = visit(ctx.argList()!.expression(0)!);
+       if (argType != CType.string) {
+          throw Exception("Erro Semântico: '$name' espera string.");
+       }
+       return name == 'stoi' ? CType.int : CType.float;
+    }
 
     final symbol = currentScope.resolve(name);
     if (symbol == null) {
@@ -174,7 +347,6 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
       throw Exception("Erro Semântico: '$name' não é uma função.");
     }
     
-    // Validação de argumentos
     final params = symbol.parameters;
     final args = ctx.argList()?.expressions() ?? [];
     
@@ -196,19 +368,6 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
 
   @override
   CType visitBlock(BlockContext ctx) {
-    // Blocos criam novo escopo (exceto se for corpo de função, que já tratamos, 
-    // mas simplificando: podemos sempre criar escopo para blocos internos)
-    // Nota: Na visitFunctionDecl já criamos o escopo dos parâmetros que serve para o bloco.
-    // Se visitarmos o bloco diretamente de um if/while, precisamos de novo escopo.
-    // Para simplificar, vamos assumir que functionDecl trata seu escopo e block trata escopos aninhados.
-    // Mas cuidado para não criar escopo duplo na função.
-    
-    // Uma abordagem segura: O pai decide se cria escopo ou o bloco cria.
-    // Vamos fazer o bloco SEMPRE criar escopo, exceto se o pai for função?
-    // Melhor: O bloco sempre cria escopo. Na função, os parâmetros estão no escopo da função, 
-    // e o corpo é um bloco que terá seu próprio escopo (filho do escopo da função).
-    // Isso é válido em C? Sim, parâmetros são locais à função, variáveis do corpo também.
-    
     final previousScope = currentScope;
     currentScope = Scope(previousScope);
 
@@ -222,10 +381,6 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
 
   @override
   CType visitAssignExpr(AssignExprContext ctx) {
-    // Lado esquerdo deve ser ID ou ArrayAccess
-    // Como expression é recursiva, precisamos checar o tipo do contexto do lado esquerdo.
-    // ctx.expression(0) é o lado esquerdo.
-    
     final leftExpr = ctx.expression(0)!;
     final rightExpr = ctx.expression(1)!;
     
@@ -241,16 +396,9 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
        if (symbol is! VarSymbol) {
           throw Exception("Erro Semântico: '$name' não é uma variável.");
        }
-       // Se for array sem índice, erro (exceto se right for array literal, mas array literal não é expression normal)
-       // ArrayLiteral é expression, então ok.
        
        if (symbol is ArraySymbol) {
-          // Atribuição direta a array só permitida se right for ArrayLiteral
           if (rightExpr is ArrayLiteralContext) {
-             // Validação de literal já feita no visitArrayLiteral?
-             // Não, visitArrayLiteral retorna tipo do elemento.
-             // Precisamos validar tamanho e tipo aqui.
-             
              final literalSize = rightExpr.expressions().length;
              if (literalSize > symbol.size) {
                 throw Exception("Erro Semântico: Tamanho da lista ($literalSize) maior que o array '$name' (${symbol.size}).");
@@ -260,12 +408,7 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
              if (!_areTypesCompatible(symbol.elementType, elementType)) {
                 throw Exception("Erro Semântico: Tipos incompatíveis na inicialização do array '$name'.");
              }
-             return symbol.elementType; // Retorna tipo do elemento? Ou void? Em C, array assignment não é expression válida padrão, mas aqui permitimos init.
-             // Mas espere, C não permite 'arr = {1,2}' depois da declaração.
-             // Vamos permitir? O usuário pediu "inicialização de array".
-             // Se for assignment normal, C não permite.
-             // Mas nossa gramática permite. Vamos permitir por conveniência?
-             // Sim.
+             return symbol.elementType;
           } else {
              throw Exception("Erro Semântico: Não é possível atribuir a um array inteiro (use índice).");
           }
@@ -274,11 +417,11 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
        targetType = symbol.type;
        
     } else if (leftExpr is ArrayAccessExprContext) {
-       // Valida o array access
        targetType = visit(leftExpr) ?? CType.error;
-       // visitArrayAccessExpr já valida se é array e índice int.
+    } else if (leftExpr is MemberAccessExprContext) {
+       targetType = visit(leftExpr) ?? CType.error;
     } else {
-       throw Exception("Erro Semântico: Lado esquerdo da atribuição deve ser uma variável ou elemento de array.");
+       throw Exception("Erro Semântico: Lado esquerdo da atribuição deve ser uma variável, elemento de array ou membro de struct/union.");
     }
     
     final valueType = visit(rightExpr) ?? CType.error;
@@ -293,7 +436,6 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   @override
   CType visitArrayAccessExpr(ArrayAccessExprContext ctx) {
     final leftExpr = ctx.expression(0)!;
-    // Simplificação: assume ID
     if (leftExpr is! IdExprContext) throw Exception("Erro Semântico: Acesso complexo não suportado.");
     
     final name = (leftExpr as IdExprContext).ID()!.text!;
@@ -323,26 +465,22 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
         firstType = type;
       } else {
         if (!_areTypesCompatible(firstType, type)) {
-           // Tenta promover
            if (_areTypesCompatible(firstType, type)) {
-              // ok
            } else if (_areTypesCompatible(type, firstType)) {
-              firstType = type; // Upgrade (ex: int -> float)
+              firstType = type;
            } else {
               throw Exception("Erro Semântico: Elementos da lista devem ter o mesmo tipo.");
            }
         }
       }
     }
-    return firstType ?? CType.voidType; // Lista vazia?
+    return firstType ?? CType.voidType;
   }
 
   @override
   CType visitIntExpr(IntExprContext ctx) {
     return CType.int;
   }
-
-
 
   @override
   CType visitFloatExpr(FloatExprContext ctx) {
@@ -388,6 +526,11 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   }
 
   @override
+  CType visitParenExpr(ParenExprContext ctx) {
+    return visit(ctx.expression()!) ?? CType.error;
+  }
+
+  @override
   CType visitLogicAndExpr(LogicAndExprContext ctx) {
     final left = visit(ctx.expression(0)!) ?? CType.error;
     final right = visit(ctx.expression(1)!) ?? CType.error;
@@ -415,12 +558,11 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
     final right = visit(ctx.expression(1)!) ?? CType.error;
     
     if (!_areTypesCompatible(left, right) && !_areTypesCompatible(right, left)) {
-       // Permite int vs float
        if (!((left == CType.int || left == CType.float) && (right == CType.int || right == CType.float))) {
           throw Exception("Erro Semântico: Operandos de comparação devem ser numéricos.");
        }
     }
-    return CType.int; // Representa boolean (0 ou 1)
+    return CType.int;
   }
 
   @override
@@ -431,7 +573,7 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
     if (!_areTypesCompatible(left, right) && !_areTypesCompatible(right, left)) {
        throw Exception("Erro Semântico: Tipos incompatíveis para igualdade.");
     }
-    return CType.int; // Representa boolean
+    return CType.int;
   }
 
   @override
@@ -484,10 +626,6 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
     
     _loopOrSwitchDepth++;
     try {
-       // Visita o bloco do switch manualmente para validar os cases
-       // A gramática define switchBlock como lista de (caseLabel statement*)
-       // Mas o parser gera switchBlockContext.
-       // Vamos visitar o switchBlock.
        visit(ctx.switchBlock()!);
     } finally {
        _loopOrSwitchDepth--;
@@ -497,12 +635,6 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   
   @override
   CType visitSwitchBlock(SwitchBlockContext ctx) {
-     // O switchBlock contém filhos que são CaseStmt ou DefaultStmt (via caseLabel) e statements.
-     // Precisamos iterar sobre os filhos.
-     // Mas a regra é: switchBlock : (caseLabel statement*)*
-     // O ANTLR gera métodos para acessar caseLabel() e statement().
-     // Vamos simplificar: visitar todos os filhos.
-     
      for (var i = 0; i < ctx.childCount; i++) {
         visit(ctx.getChild(i)!);
      }
@@ -512,7 +644,6 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   @override
   CType visitCaseStmt(CaseStmtContext ctx) {
      final exprType = visit(ctx.expression()!) ?? CType.error;
-     // Idealmente verificar se é constante e compatível com o switch, mas aqui só validamos tipo básico
      if (exprType != CType.int && exprType != CType.char) {
         throw Exception("Erro Semântico: Case deve ser int ou char.");
      }
@@ -527,13 +658,9 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
   @override
   CType visitForStmt(ForStmtContext ctx) {
     final previousScope = currentScope;
-    currentScope = Scope(previousScope); // Escopo para init
-    // print("DEBUG: Criado escopo ${currentScope.hashCode} para FOR (pai: ${previousScope.hashCode})");
+    currentScope = Scope(previousScope);
     
     try {
-       // Implementação robusta baseada em iteração de filhos para identificar partes do FOR
-       
-       // Primeiro, tratar Init se for VarDecl (pois VarDecl não é ExpressionContext)
        if (ctx.varDecl() != null) {
           visit(ctx.varDecl()!);
        }
@@ -544,16 +671,13 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
              semiCount++;
           } else if (child is ExpressionContext) {
              if (semiCount == 0) {
-                // Init expression (se não for varDecl)
                 if (ctx.varDecl() == null) visit(child);
              } else if (semiCount == 1) {
-                // Condition
                 final condType = visit(child) ?? CType.error;
                 if (condType != CType.int && condType != CType.float) {
                    throw Exception("Erro Semântico: Condição do FOR deve ser numérica.");
                 }
              } else if (semiCount == 2) {
-                // Update
                 visit(child);
              }
           }
@@ -580,18 +704,11 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
     }
     
     if (_currentFunctionReturnType == null) {
-       // Return fora de função? (Na main ou global)
-       // Vamos assumir que main é void ou int, mas o parser garante que estamos dentro de função?
-       // Não necessariamente. Mas nossa estrutura de visitação sim.
-       // Se estivermos no nível global (visitProgram), não deveríamos encontrar returnStmt solto fora de função se a gramática não permitir.
-       // A gramática diz: program : declaration*. declaration : varDecl | functionDecl.
-       // Statements só existem dentro de block, que está dentro de functionDecl.
-       // Então _currentFunctionReturnType deve estar setado se visitarmos corretamente.
-       // Mas cuidado com blocos aninhados.
-    }
-    
-    if (!_areTypesCompatible(_currentFunctionReturnType ?? CType.voidType, returnType)) {
-       throw Exception("Erro Semântico: Tipo de retorno incompatível. Esperado $_currentFunctionReturnType, recebido $returnType.");
+       // Ignora return fora de função se necessário, ou lança erro
+    } else {
+       if (!_areTypesCompatible(_currentFunctionReturnType!, returnType)) {
+          throw Exception("Erro Semântico: Tipo de retorno incompatível. Esperado $_currentFunctionReturnType, recebido $returnType.");
+       }
     }
     
     return CType.voidType;
@@ -618,14 +735,14 @@ class SemanticAnalyzer extends CSubsetBaseVisitor<CType> {
 
   bool _areTypesCompatible(CType target, CType value) {
     if (target == value) return true;
-    if (target == CType.float && value == CType.int) return true; // Promoção
+    if (target == CType.float && value == CType.int) return true;
     return false;
   }
 
   CType _getResultingType(CType t1, CType t2) {
     if (t1 == CType.float || t2 == CType.float) return CType.float;
     if (t1 == CType.int && t2 == CType.int) return CType.int;
-    if (t1 == CType.string && t2 == CType.string) return CType.string; // Concatenação
+    if (t1 == CType.string && t2 == CType.string) return CType.string;
     return CType.error;
   }
   

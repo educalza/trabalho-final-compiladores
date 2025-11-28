@@ -10,6 +10,8 @@ program
 declaration
     : varDecl
     | functionDecl
+    | structDecl
+    | unionDecl
     ;
 
 // Declaração de Variável: tipo lista_ids;
@@ -23,7 +25,17 @@ varDeclarator
 
 // Declaração de Função: tipo nome(params) { corpo }
 functionDecl
-    : typeSpecifier ID '(' paramList? ')' block
+    : typeSpecifier ID '(' paramList? ')' funcBody=block
+    ;
+
+// Declaração de Struct
+structDecl
+    : STRUCT ID '{' varDecl* '}' ';'
+    ;
+
+// Declaração de Union
+unionDecl
+    : UNION ID '{' varDecl* '}' ';'
     ;
 
 paramList
@@ -36,11 +48,13 @@ param
 
 // Tipos suportados
 typeSpecifier
-    : 'int'
-    | 'float'
-    | 'char'
-    | 'void'
-    | 'string'
+    : 'int'      # intType
+    | 'float'    # floatType
+    | 'char'     # charType
+    | 'void'     # voidType
+    | 'string'   # stringType
+    | STRUCT ID  # structType
+    | UNION ID   # unionType
     ;
 
 // Bloco de código
@@ -51,6 +65,8 @@ block
 // Comandos (Statements)
 statement
     : varDecl               # varDeclStmt
+    | structDecl            # structDeclStmt
+    | unionDecl             # unionDeclStmt
     | ifStmt                # ifStatement
     | whileStmt             # whileStatement
     | returnStmt            # returnStatement
@@ -113,6 +129,7 @@ expression
     : '(' expression ')'                        # parenExpr
     | functionCall                              # callExpr
     | expression '[' expression ']'             # arrayAccessExpr
+    | expression '.' ID                         # memberAccessExpr
     | '{' expression (',' expression)* '}'      # arrayLiteral
     | expression op=('*' | '/' | '%') expression # mulDivExpr
     | expression op=('+' | '-') expression      # addSubExpr
@@ -144,6 +161,8 @@ DEFAULT : 'default';
 FOR     : 'for';
 DO      : 'do';
 BREAK   : 'break';
+STRUCT  : 'struct';
+UNION   : 'union';
 
 // Operadores
 PLUS    : '+';

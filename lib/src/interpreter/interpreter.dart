@@ -45,12 +45,59 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
        print(arg);
        return null;
     }
-    
+
     if (name == 'gets') {
        if (ctx.argList() != null && ctx.argList()!.expressions().isNotEmpty) {
           throw Exception("Erro de Execução: 'gets' não aceita argumentos.");
        }
        return stdin.readLineSync() ?? "";
+    }
+    
+    if (name == 'printf') {
+       final format = visit(ctx.argList()!.expression(0)!) as String;
+       final args = <dynamic>[];
+       for (int i = 1; i < ctx.argList()!.expressions().length; i++) {
+          args.add(visit(ctx.argList()!.expression(i)!));
+       }
+       
+       String output = format;
+       int argIndex = 0;
+       output = output.replaceAllMapped(RegExp(r'%[dfs]'), (match) {
+          if (argIndex < args.length) {
+             return args[argIndex++].toString();
+          }
+          return match.group(0)!;
+       });
+       output = output.replaceAll(r'\n', '\n');
+       stdout.write(output);
+       return null;
+    }
+    
+    if (name == 'scanf') {
+       final format = visit(ctx.argList()!.expression(0)!) as String;
+       final varExpr = ctx.argList()!.expression(1)! as IdExprContext;
+       final varName = varExpr.ID()!.text!;
+       final input = stdin.readLineSync() ?? "";
+       dynamic value;
+       if (format.contains("%d")) {
+          value = int.tryParse(input) ?? 0;
+       } else if (format.contains("%f")) {
+          value = double.tryParse(input) ?? 0.0;
+       } else {
+          value = input;
+       }
+       environment.assign(varName, value);
+       return null;
+    }
+    
+    if (name == 'stoi') {
+       final str = visit(ctx.argList()!.expression(0)!) as String;
+       return int.tryParse(str) ?? 0;
+    }
+    
+    if (name == 'stof') {
+       final str = visit(ctx.argList()!.expression(0)!) as String;
+       return double.tryParse(str) ?? 0.0;
     }
     
     // Recupera a função do ambiente
@@ -60,14 +107,11 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
     }
     
     if (function is FunctionDeclContext) {
-       // Executa função definida pelo usuário
-       // 1. Cria novo escopo
        final previousEnv = environment;
        environment = Environment(previousEnv);
        
        try {
-          // 2. Define parâmetros
-          final paramList = function.paramList();
+          final paramList = (function as FunctionDeclContext).paramList();
           if (paramList != null) {
              final params = paramList.params();
              final args = ctx.argList()?.expressions() ?? [];
@@ -83,8 +127,7 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
              }
           }
           
-          // 3. Executa corpo
-          visit(function.block()!);
+          visit((function as dynamic).block()!);
           
        } catch (e) {
           if (e is ReturnException) {
@@ -94,7 +137,7 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
        } finally {
           environment = previousEnv;
        }
-       return null; // Retorno padrão se não houver return explícito
+       return null;
     }
     
     throw Exception("Erro de Execução: '$name' não é uma função.");
@@ -109,7 +152,34 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
   }
 
   @override
+  dynamic visitStructDecl(StructDeclContext ctx) {
+     final name = ctx.ID()!.text!;
+     environment.define(name, ctx);
+     return null;
+  }
+
+  @override
+  dynamic visitUnionDecl(UnionDeclContext ctx) {
+     final name = ctx.ID()!.text!;
+     environment.define(name, ctx);
+     return null;
+  }
+
+  @override
   dynamic visitVarDecl(VarDeclContext ctx) {
+    final typeSpec = ctx.typeSpecifier()!;
+    String? structOrUnionName;
+    bool isStruct = false;
+    bool isUnion = false;
+    
+    if (typeSpec is StructTypeContext) {
+       structOrUnionName = typeSpec.ID()!.text!;
+       isStruct = true;
+    } else if (typeSpec is UnionTypeContext) {
+       structOrUnionName = typeSpec.ID()!.text!;
+       isUnion = true;
+    }
+
     for (var declarator in ctx.varDeclarators()) {
       final name = declarator.ID()!.text!;
       
@@ -124,7 +194,6 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
         final array = List<dynamic>.filled(size, null);
         
         if (initialValue != null) {
-           // Inicialização de array
            if (initialValue is List) {
               for (int i = 0; i < initialValue.length; i++) {
                  if (i < size) array[i] = initialValue[i];
@@ -133,10 +202,55 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
         }
         environment.define(name, array);
       } else {
-        environment.define(name, initialValue);
+        // Variável normal (pode ser struct/union)
+        if (isStruct || isUnion) {
+           // Instancia struct/union
+           final typeDef = environment.get(structOrUnionName!);
+           if (typeDef == null) throw Exception("Erro de Execução: Tipo '$structOrUnionName' não definido.");
+           
+           final instance = <String, dynamic>{};
+           
+           // Popula campos com null
+           List<VarDeclContext> fields = [];
+           if (isStruct && typeDef is StructDeclContext) {
+              fields = typeDef.varDecls();
+           } else if (isUnion && typeDef is UnionDeclContext) {
+              fields = typeDef.varDecls();
+           } else {
+              throw Exception("Erro de Execução: Definição de '$structOrUnionName' inválida.");
+           }
+           
+           for (var fieldDecl in fields) {
+              for (var fieldDeclarator in fieldDecl.varDeclarators()) {
+                 instance[fieldDeclarator.ID()!.text!] = null;
+              }
+           }
+           
+           // Se for union, talvez precise de lógica especial, mas Map resolve por enquanto (todos compartilham memória? Não em Dart Map. 
+           // Para simular union, deveríamos ter apenas UM valor ativo. Mas para simplificar, vamos usar Map e permitir todos.
+           // O comportamento de "corromper" outros campos não será simulado aqui.)
+           
+           environment.define(name, instance);
+        } else {
+           environment.define(name, initialValue);
+        }
       }
     }
     return null;
+  }
+  
+  @override
+  dynamic visitMemberAccessExpr(MemberAccessExprContext ctx) {
+     final left = visit(ctx.expression()!);
+     final member = ctx.ID()!.text!;
+     
+     if (left is Map) {
+        if (!left.containsKey(member)) {
+           throw Exception("Erro de Execução: Membro '$member' não encontrado.");
+        }
+        return left[member];
+     }
+     throw Exception("Erro de Execução: Acesso a membro em algo que não é struct/union.");
   }
   
   @override
@@ -172,12 +286,7 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
        return value;
        
     } else if (leftExpr is ArrayAccessExprContext) {
-       // Array assignment: ID [ expr ] = expr
-       // Precisamos re-avaliar o array access para obter o array e o índice, não o valor.
-       // Mas visitArrayAccessExpr retorna o valor.
-       // Então precisamos duplicar a lógica de acesso aqui ou refatorar.
-       // Vamos duplicar por simplicidade.
-       
+       // ... (código existente)
        final arrayExpr = leftExpr.expression(0)!; // ID
        if (arrayExpr is! IdExprContext) throw Exception("Acesso complexo não suportado.");
        
@@ -190,6 +299,21 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
        if (index < 0 || index >= array.length) throw Exception("Erro de Execução: Índice fora dos limites.");
        
        array[index] = value;
+       return value;
+       
+    } else if (leftExpr is MemberAccessExprContext) {
+       // Atribuição a membro: p.x = 10
+       final objectExpr = leftExpr.expression()!;
+       final member = leftExpr.ID()!.text!;
+       
+       final object = visit(objectExpr);
+       if (object is! Map) throw Exception("Erro de Execução: Atribuição a membro de não-struct.");
+       
+       if (!object.containsKey(member)) {
+          throw Exception("Erro de Execução: Membro '$member' não existe.");
+       }
+       
+       object[member] = value;
        return value;
        
     } else {
@@ -271,11 +395,21 @@ class Interpreter extends CSubsetBaseVisitor<dynamic> {
     final right = visit(ctx.expression(1)!);
     final op = ctx.op!.text!;
 
+    if (left == null || right == null) {
+       throw Exception("Erro de Execução: Operando nulo em operação '$op'.");
+    }
+
     if (op == '*') return left * right;
     if (op == '/') return left / right;
     if (op == '%') return (left as num).toInt() % (right as num).toInt();
     return null;
   }
+
+  @override
+  dynamic visitParenExpr(ParenExprContext ctx) {
+    return visit(ctx.expression()!);
+  }
+
 
   @override
   dynamic visitLogicAndExpr(LogicAndExprContext ctx) {

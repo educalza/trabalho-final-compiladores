@@ -1,5 +1,5 @@
 /// Representa um tipo básico na linguagem
-enum CType { int, float, char, voidType, string, error }
+enum CType { int, float, char, voidType, string, error, structType, unionType }
 
 /// Classe base para qualquer símbolo (variável ou função)
 abstract class Symbol {
@@ -11,7 +11,9 @@ abstract class Symbol {
 
 /// Representa uma variável
 class VarSymbol extends Symbol {
-  VarSymbol(String name, CType type) : super(name, type);
+  final String? typeName; // Para structs/unions (ex: "Point")
+
+  VarSymbol(String name, CType type, {this.typeName}) : super(name, type);
 }
 
 /// Representa um array
@@ -21,10 +23,37 @@ class ArraySymbol extends VarSymbol {
 
   ArraySymbol(String name, CType elementType, this.size) 
       : this.elementType = elementType, 
-        super(name, elementType); // Tipo base é o do elemento ou um tipo 'array'?
-        // Para simplificar, vamos dizer que o tipo do símbolo é o tipo do elemento,
-        // mas precisamos distinguir array de variável normal.
-        // Melhor: adicionar CType.array? Ou usar is ArraySymbol.
+        super(name, elementType); 
+}
+
+/// Representa uma definição de Struct
+class StructSymbol extends Symbol {
+  final Map<String, VarSymbol> members = {};
+
+  StructSymbol(String name) : super(name, CType.structType);
+  
+  void defineMember(VarSymbol member) {
+    members[member.name] = member;
+  }
+  
+  VarSymbol? resolveMember(String name) {
+    return members[name];
+  }
+}
+
+/// Representa uma definição de Union
+class UnionSymbol extends Symbol {
+  final Map<String, VarSymbol> members = {};
+
+  UnionSymbol(String name) : super(name, CType.unionType);
+  
+  void defineMember(VarSymbol member) {
+    members[member.name] = member;
+  }
+  
+  VarSymbol? resolveMember(String name) {
+    return members[name];
+  }
 }
 
 /// Representa uma função

@@ -1,0 +1,2760 @@
+// Generated from lib/src/grammar/CSubset.g4 by ANTLR 4.13.2
+// ignore_for_file: unused_import, unused_local_variable, prefer_single_quotes
+import 'package:antlr4/antlr4.dart';
+
+import 'CSubsetListener.dart';
+import 'CSubsetBaseListener.dart';
+import 'CSubsetVisitor.dart';
+import 'CSubsetBaseVisitor.dart';
+const int RULE_program = 0, RULE_declaration = 1, RULE_varDecl = 2, RULE_varDeclarator = 3, 
+          RULE_functionDecl = 4, RULE_structDecl = 5, RULE_unionDecl = 6, 
+          RULE_paramList = 7, RULE_param = 8, RULE_typeSpecifier = 9, RULE_block = 10, 
+          RULE_statement = 11, RULE_switchStmt = 12, RULE_switchBlock = 13, 
+          RULE_caseLabel = 14, RULE_forStmt = 15, RULE_breakStmt = 16, RULE_returnStmt = 17, 
+          RULE_ifStmt = 18, RULE_whileStmt = 19, RULE_doWhileStmt = 20, 
+          RULE_functionCall = 21, RULE_argList = 22, RULE_expression = 23;
+class CSubsetParser extends Parser {
+  static final checkVersion = () => RuntimeMetaData.checkVersion('4.13.2', RuntimeMetaData.VERSION);
+  static const int TOKEN_EOF = IntStream.EOF;
+
+  static final List<DFA> _decisionToDFA = List.generate(
+      _ATN.numberOfDecisions, (i) => DFA(_ATN.getDecisionState(i), i));
+  static final PredictionContextCache _sharedContextCache = PredictionContextCache();
+  static const int TOKEN_T__0 = 1, TOKEN_T__1 = 2, TOKEN_IF = 3, TOKEN_ELSE = 4, 
+                   TOKEN_WHILE = 5, TOKEN_RETURN = 6, TOKEN_INT_TYPE = 7, 
+                   TOKEN_FLOAT_TYPE = 8, TOKEN_CHAR_TYPE = 9, TOKEN_VOID_TYPE = 10, 
+                   TOKEN_SWITCH = 11, TOKEN_CASE = 12, TOKEN_DEFAULT = 13, 
+                   TOKEN_FOR = 14, TOKEN_DO = 15, TOKEN_BREAK = 16, TOKEN_STRUCT = 17, 
+                   TOKEN_UNION = 18, TOKEN_PLUS = 19, TOKEN_MINUS = 20, 
+                   TOKEN_MULT = 21, TOKEN_DIV = 22, TOKEN_MOD = 23, TOKEN_ASSIGN = 24, 
+                   TOKEN_EQ = 25, TOKEN_NEQ = 26, TOKEN_LT = 27, TOKEN_GT = 28, 
+                   TOKEN_LE = 29, TOKEN_GE = 30, TOKEN_AND = 31, TOKEN_OR = 32, 
+                   TOKEN_COMMA = 33, TOKEN_SEMI = 34, TOKEN_COLON = 35, 
+                   TOKEN_LPAREN = 36, TOKEN_RPAREN = 37, TOKEN_LBRACE = 38, 
+                   TOKEN_RBRACE = 39, TOKEN_LBRACKET = 40, TOKEN_RBRACKET = 41, 
+                   TOKEN_ID = 42, TOKEN_INT = 43, TOKEN_FLOAT = 44, TOKEN_STRING = 45, 
+                   TOKEN_WS = 46, TOKEN_COMMENT = 47, TOKEN_BLOCK_COMMENT = 48;
+
+  @override
+  final List<String> ruleNames = [
+    'program', 'declaration', 'varDecl', 'varDeclarator', 'functionDecl', 
+    'structDecl', 'unionDecl', 'paramList', 'param', 'typeSpecifier', 'block', 
+    'statement', 'switchStmt', 'switchBlock', 'caseLabel', 'forStmt', 'breakStmt', 
+    'returnStmt', 'ifStmt', 'whileStmt', 'doWhileStmt', 'functionCall', 
+    'argList', 'expression'
+  ];
+
+  static final List<String?> _LITERAL_NAMES = [
+      null, "'string'", "'.'", "'if'", "'else'", "'while'", "'return'", 
+      "'int'", "'float'", "'char'", "'void'", "'switch'", "'case'", "'default'", 
+      "'for'", "'do'", "'break'", "'struct'", "'union'", "'+'", "'-'", "'*'", 
+      "'/'", "'%'", "'='", "'=='", "'!='", "'<'", "'>'", "'<='", "'>='", 
+      "'&&'", "'||'", "','", "';'", "':'", "'('", "')'", "'{'", "'}'", "'['", 
+      "']'"
+  ];
+  static final List<String?> _SYMBOLIC_NAMES = [
+      null, null, null, "IF", "ELSE", "WHILE", "RETURN", "INT_TYPE", "FLOAT_TYPE", 
+      "CHAR_TYPE", "VOID_TYPE", "SWITCH", "CASE", "DEFAULT", "FOR", "DO", 
+      "BREAK", "STRUCT", "UNION", "PLUS", "MINUS", "MULT", "DIV", "MOD", 
+      "ASSIGN", "EQ", "NEQ", "LT", "GT", "LE", "GE", "AND", "OR", "COMMA", 
+      "SEMI", "COLON", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACKET", 
+      "RBRACKET", "ID", "INT", "FLOAT", "STRING", "WS", "COMMENT", "BLOCK_COMMENT"
+  ];
+  static final Vocabulary VOCABULARY = VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
+
+  @override
+  Vocabulary get vocabulary {
+    return VOCABULARY;
+  }
+
+  @override
+  String get grammarFileName => 'CSubset.g4';
+
+  @override
+  List<int> get serializedATN => _serializedATN;
+
+  @override
+  ATN getATN() {
+   return _ATN;
+  }
+
+  CSubsetParser(TokenStream input) : super(input) {
+    interpreter = ParserATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
+  }
+
+  ProgramContext program() {
+    dynamic _localctx = ProgramContext(context, state);
+    enterRule(_localctx, 0, RULE_program);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 51;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      while ((((_la) & ~0x3f) == 0 && ((1 << _la) & 395138) != 0)) {
+        state = 48;
+        declaration();
+        state = 53;
+        errorHandler.sync(this);
+        _la = tokenStream.LA(1)!;
+      }
+      state = 54;
+      match(TOKEN_EOF);
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  DeclarationContext declaration() {
+    dynamic _localctx = DeclarationContext(context, state);
+    enterRule(_localctx, 2, RULE_declaration);
+    try {
+      state = 60;
+      errorHandler.sync(this);
+      switch (interpreter!.adaptivePredict(tokenStream, 1, context)) {
+      case 1:
+        enterOuterAlt(_localctx, 1);
+        state = 56;
+        varDecl();
+        break;
+      case 2:
+        enterOuterAlt(_localctx, 2);
+        state = 57;
+        functionDecl();
+        break;
+      case 3:
+        enterOuterAlt(_localctx, 3);
+        state = 58;
+        structDecl();
+        break;
+      case 4:
+        enterOuterAlt(_localctx, 4);
+        state = 59;
+        unionDecl();
+        break;
+      }
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  VarDeclContext varDecl() {
+    dynamic _localctx = VarDeclContext(context, state);
+    enterRule(_localctx, 4, RULE_varDecl);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 62;
+      typeSpecifier();
+      state = 63;
+      varDeclarator();
+      state = 68;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      while (_la == TOKEN_COMMA) {
+        state = 64;
+        match(TOKEN_COMMA);
+        state = 65;
+        varDeclarator();
+        state = 70;
+        errorHandler.sync(this);
+        _la = tokenStream.LA(1)!;
+      }
+      state = 71;
+      match(TOKEN_SEMI);
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  VarDeclaratorContext varDeclarator() {
+    dynamic _localctx = VarDeclaratorContext(context, state);
+    enterRule(_localctx, 6, RULE_varDeclarator);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 73;
+      match(TOKEN_ID);
+      state = 77;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      if (_la == TOKEN_LBRACKET) {
+        state = 74;
+        match(TOKEN_LBRACKET);
+        state = 75;
+        match(TOKEN_INT);
+        state = 76;
+        match(TOKEN_RBRACKET);
+      }
+
+      state = 81;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      if (_la == TOKEN_ASSIGN) {
+        state = 79;
+        match(TOKEN_ASSIGN);
+        state = 80;
+        expression(0);
+      }
+
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  FunctionDeclContext functionDecl() {
+    dynamic _localctx = FunctionDeclContext(context, state);
+    enterRule(_localctx, 8, RULE_functionDecl);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 83;
+      typeSpecifier();
+      state = 84;
+      match(TOKEN_ID);
+      state = 85;
+      match(TOKEN_LPAREN);
+      state = 87;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      if ((((_la) & ~0x3f) == 0 && ((1 << _la) & 395138) != 0)) {
+        state = 86;
+        paramList();
+      }
+
+      state = 89;
+      match(TOKEN_RPAREN);
+      state = 90;
+      _localctx.funcBody = block();
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  StructDeclContext structDecl() {
+    dynamic _localctx = StructDeclContext(context, state);
+    enterRule(_localctx, 10, RULE_structDecl);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 92;
+      match(TOKEN_STRUCT);
+      state = 93;
+      match(TOKEN_ID);
+      state = 94;
+      match(TOKEN_LBRACE);
+      state = 98;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      while ((((_la) & ~0x3f) == 0 && ((1 << _la) & 395138) != 0)) {
+        state = 95;
+        varDecl();
+        state = 100;
+        errorHandler.sync(this);
+        _la = tokenStream.LA(1)!;
+      }
+      state = 101;
+      match(TOKEN_RBRACE);
+      state = 102;
+      match(TOKEN_SEMI);
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  UnionDeclContext unionDecl() {
+    dynamic _localctx = UnionDeclContext(context, state);
+    enterRule(_localctx, 12, RULE_unionDecl);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 104;
+      match(TOKEN_UNION);
+      state = 105;
+      match(TOKEN_ID);
+      state = 106;
+      match(TOKEN_LBRACE);
+      state = 110;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      while ((((_la) & ~0x3f) == 0 && ((1 << _la) & 395138) != 0)) {
+        state = 107;
+        varDecl();
+        state = 112;
+        errorHandler.sync(this);
+        _la = tokenStream.LA(1)!;
+      }
+      state = 113;
+      match(TOKEN_RBRACE);
+      state = 114;
+      match(TOKEN_SEMI);
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  ParamListContext paramList() {
+    dynamic _localctx = ParamListContext(context, state);
+    enterRule(_localctx, 14, RULE_paramList);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 116;
+      param();
+      state = 121;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      while (_la == TOKEN_COMMA) {
+        state = 117;
+        match(TOKEN_COMMA);
+        state = 118;
+        param();
+        state = 123;
+        errorHandler.sync(this);
+        _la = tokenStream.LA(1)!;
+      }
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  ParamContext param() {
+    dynamic _localctx = ParamContext(context, state);
+    enterRule(_localctx, 16, RULE_param);
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 124;
+      typeSpecifier();
+      state = 125;
+      match(TOKEN_ID);
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  TypeSpecifierContext typeSpecifier() {
+    dynamic _localctx = TypeSpecifierContext(context, state);
+    enterRule(_localctx, 18, RULE_typeSpecifier);
+    try {
+      state = 136;
+      errorHandler.sync(this);
+      switch (tokenStream.LA(1)!) {
+      case TOKEN_INT_TYPE:
+        _localctx = IntTypeContext(_localctx);
+        enterOuterAlt(_localctx, 1);
+        state = 127;
+        match(TOKEN_INT_TYPE);
+        break;
+      case TOKEN_FLOAT_TYPE:
+        _localctx = FloatTypeContext(_localctx);
+        enterOuterAlt(_localctx, 2);
+        state = 128;
+        match(TOKEN_FLOAT_TYPE);
+        break;
+      case TOKEN_CHAR_TYPE:
+        _localctx = CharTypeContext(_localctx);
+        enterOuterAlt(_localctx, 3);
+        state = 129;
+        match(TOKEN_CHAR_TYPE);
+        break;
+      case TOKEN_VOID_TYPE:
+        _localctx = VoidTypeContext(_localctx);
+        enterOuterAlt(_localctx, 4);
+        state = 130;
+        match(TOKEN_VOID_TYPE);
+        break;
+      case TOKEN_T__0:
+        _localctx = StringTypeContext(_localctx);
+        enterOuterAlt(_localctx, 5);
+        state = 131;
+        match(TOKEN_T__0);
+        break;
+      case TOKEN_STRUCT:
+        _localctx = StructTypeContext(_localctx);
+        enterOuterAlt(_localctx, 6);
+        state = 132;
+        match(TOKEN_STRUCT);
+        state = 133;
+        match(TOKEN_ID);
+        break;
+      case TOKEN_UNION:
+        _localctx = UnionTypeContext(_localctx);
+        enterOuterAlt(_localctx, 7);
+        state = 134;
+        match(TOKEN_UNION);
+        state = 135;
+        match(TOKEN_ID);
+        break;
+      default:
+        throw NoViableAltException(this);
+      }
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  BlockContext block() {
+    dynamic _localctx = BlockContext(context, state);
+    enterRule(_localctx, 20, RULE_block);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 138;
+      match(TOKEN_LBRACE);
+      state = 142;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      while ((((_la) & ~0x3f) == 0 && ((1 << _la) & 66331475431402) != 0)) {
+        state = 139;
+        statement();
+        state = 144;
+        errorHandler.sync(this);
+        _la = tokenStream.LA(1)!;
+      }
+      state = 145;
+      match(TOKEN_RBRACE);
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  StatementContext statement() {
+    dynamic _localctx = StatementContext(context, state);
+    enterRule(_localctx, 22, RULE_statement);
+    try {
+      state = 162;
+      errorHandler.sync(this);
+      switch (interpreter!.adaptivePredict(tokenStream, 11, context)) {
+      case 1:
+        _localctx = VarDeclStmtContext(_localctx);
+        enterOuterAlt(_localctx, 1);
+        state = 147;
+        varDecl();
+        break;
+      case 2:
+        _localctx = StructDeclStmtContext(_localctx);
+        enterOuterAlt(_localctx, 2);
+        state = 148;
+        structDecl();
+        break;
+      case 3:
+        _localctx = UnionDeclStmtContext(_localctx);
+        enterOuterAlt(_localctx, 3);
+        state = 149;
+        unionDecl();
+        break;
+      case 4:
+        _localctx = IfStatementContext(_localctx);
+        enterOuterAlt(_localctx, 4);
+        state = 150;
+        ifStmt();
+        break;
+      case 5:
+        _localctx = WhileStatementContext(_localctx);
+        enterOuterAlt(_localctx, 5);
+        state = 151;
+        whileStmt();
+        break;
+      case 6:
+        _localctx = ReturnStatementContext(_localctx);
+        enterOuterAlt(_localctx, 6);
+        state = 152;
+        returnStmt();
+        break;
+      case 7:
+        _localctx = ExprStatementContext(_localctx);
+        enterOuterAlt(_localctx, 7);
+        state = 153;
+        expression(0);
+        state = 154;
+        match(TOKEN_SEMI);
+        break;
+      case 8:
+        _localctx = SwitchStatementContext(_localctx);
+        enterOuterAlt(_localctx, 8);
+        state = 156;
+        switchStmt();
+        break;
+      case 9:
+        _localctx = ForStatementContext(_localctx);
+        enterOuterAlt(_localctx, 9);
+        state = 157;
+        forStmt();
+        break;
+      case 10:
+        _localctx = DoWhileStatementContext(_localctx);
+        enterOuterAlt(_localctx, 10);
+        state = 158;
+        doWhileStmt();
+        break;
+      case 11:
+        _localctx = BreakStatementContext(_localctx);
+        enterOuterAlt(_localctx, 11);
+        state = 159;
+        breakStmt();
+        break;
+      case 12:
+        _localctx = BlockStatementContext(_localctx);
+        enterOuterAlt(_localctx, 12);
+        state = 160;
+        block();
+        break;
+      case 13:
+        _localctx = EmptyStatementContext(_localctx);
+        enterOuterAlt(_localctx, 13);
+        state = 161;
+        match(TOKEN_SEMI);
+        break;
+      }
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  SwitchStmtContext switchStmt() {
+    dynamic _localctx = SwitchStmtContext(context, state);
+    enterRule(_localctx, 24, RULE_switchStmt);
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 164;
+      match(TOKEN_SWITCH);
+      state = 165;
+      match(TOKEN_LPAREN);
+      state = 166;
+      expression(0);
+      state = 167;
+      match(TOKEN_RPAREN);
+      state = 168;
+      match(TOKEN_LBRACE);
+      state = 169;
+      switchBlock();
+      state = 170;
+      match(TOKEN_RBRACE);
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  SwitchBlockContext switchBlock() {
+    dynamic _localctx = SwitchBlockContext(context, state);
+    enterRule(_localctx, 26, RULE_switchBlock);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 181;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      while (_la == TOKEN_CASE || _la == TOKEN_DEFAULT) {
+        state = 172;
+        caseLabel();
+        state = 176;
+        errorHandler.sync(this);
+        _la = tokenStream.LA(1)!;
+        while ((((_la) & ~0x3f) == 0 && ((1 << _la) & 66331475431402) != 0)) {
+          state = 173;
+          statement();
+          state = 178;
+          errorHandler.sync(this);
+          _la = tokenStream.LA(1)!;
+        }
+        state = 183;
+        errorHandler.sync(this);
+        _la = tokenStream.LA(1)!;
+      }
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  CaseLabelContext caseLabel() {
+    dynamic _localctx = CaseLabelContext(context, state);
+    enterRule(_localctx, 28, RULE_caseLabel);
+    try {
+      state = 190;
+      errorHandler.sync(this);
+      switch (tokenStream.LA(1)!) {
+      case TOKEN_CASE:
+        _localctx = CaseStmtContext(_localctx);
+        enterOuterAlt(_localctx, 1);
+        state = 184;
+        match(TOKEN_CASE);
+        state = 185;
+        expression(0);
+        state = 186;
+        match(TOKEN_COLON);
+        break;
+      case TOKEN_DEFAULT:
+        _localctx = DefaultStmtContext(_localctx);
+        enterOuterAlt(_localctx, 2);
+        state = 188;
+        match(TOKEN_DEFAULT);
+        state = 189;
+        match(TOKEN_COLON);
+        break;
+      default:
+        throw NoViableAltException(this);
+      }
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  ForStmtContext forStmt() {
+    dynamic _localctx = ForStmtContext(context, state);
+    enterRule(_localctx, 30, RULE_forStmt);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 192;
+      match(TOKEN_FOR);
+      state = 193;
+      match(TOKEN_LPAREN);
+      state = 199;
+      errorHandler.sync(this);
+      switch (tokenStream.LA(1)!) {
+      case TOKEN_T__0:
+      case TOKEN_INT_TYPE:
+      case TOKEN_FLOAT_TYPE:
+      case TOKEN_CHAR_TYPE:
+      case TOKEN_VOID_TYPE:
+      case TOKEN_STRUCT:
+      case TOKEN_UNION:
+        state = 194;
+        varDecl();
+        break;
+      case TOKEN_LPAREN:
+      case TOKEN_LBRACE:
+      case TOKEN_ID:
+      case TOKEN_INT:
+      case TOKEN_FLOAT:
+      case TOKEN_STRING:
+        state = 195;
+        expression(0);
+        state = 196;
+        match(TOKEN_SEMI);
+        break;
+      case TOKEN_SEMI:
+        state = 198;
+        match(TOKEN_SEMI);
+        break;
+      default:
+        throw NoViableAltException(this);
+      }
+      state = 202;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      if ((((_la) & ~0x3f) == 0 && ((1 << _la) & 66314295050240) != 0)) {
+        state = 201;
+        expression(0);
+      }
+
+      state = 204;
+      match(TOKEN_SEMI);
+      state = 206;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      if ((((_la) & ~0x3f) == 0 && ((1 << _la) & 66314295050240) != 0)) {
+        state = 205;
+        expression(0);
+      }
+
+      state = 208;
+      match(TOKEN_RPAREN);
+      state = 209;
+      statement();
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  BreakStmtContext breakStmt() {
+    dynamic _localctx = BreakStmtContext(context, state);
+    enterRule(_localctx, 32, RULE_breakStmt);
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 211;
+      match(TOKEN_BREAK);
+      state = 212;
+      match(TOKEN_SEMI);
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  ReturnStmtContext returnStmt() {
+    dynamic _localctx = ReturnStmtContext(context, state);
+    enterRule(_localctx, 34, RULE_returnStmt);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 214;
+      match(TOKEN_RETURN);
+      state = 216;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      if ((((_la) & ~0x3f) == 0 && ((1 << _la) & 66314295050240) != 0)) {
+        state = 215;
+        expression(0);
+      }
+
+      state = 218;
+      match(TOKEN_SEMI);
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  IfStmtContext ifStmt() {
+    dynamic _localctx = IfStmtContext(context, state);
+    enterRule(_localctx, 36, RULE_ifStmt);
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 220;
+      match(TOKEN_IF);
+      state = 221;
+      match(TOKEN_LPAREN);
+      state = 222;
+      expression(0);
+      state = 223;
+      match(TOKEN_RPAREN);
+      state = 224;
+      statement();
+      state = 227;
+      errorHandler.sync(this);
+      switch (interpreter!.adaptivePredict(tokenStream, 19, context)) {
+      case 1:
+        state = 225;
+        match(TOKEN_ELSE);
+        state = 226;
+        statement();
+        break;
+      }
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  WhileStmtContext whileStmt() {
+    dynamic _localctx = WhileStmtContext(context, state);
+    enterRule(_localctx, 38, RULE_whileStmt);
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 229;
+      match(TOKEN_WHILE);
+      state = 230;
+      match(TOKEN_LPAREN);
+      state = 231;
+      expression(0);
+      state = 232;
+      match(TOKEN_RPAREN);
+      state = 233;
+      statement();
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  DoWhileStmtContext doWhileStmt() {
+    dynamic _localctx = DoWhileStmtContext(context, state);
+    enterRule(_localctx, 40, RULE_doWhileStmt);
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 235;
+      match(TOKEN_DO);
+      state = 236;
+      statement();
+      state = 237;
+      match(TOKEN_WHILE);
+      state = 238;
+      match(TOKEN_LPAREN);
+      state = 239;
+      expression(0);
+      state = 240;
+      match(TOKEN_RPAREN);
+      state = 241;
+      match(TOKEN_SEMI);
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  FunctionCallContext functionCall() {
+    dynamic _localctx = FunctionCallContext(context, state);
+    enterRule(_localctx, 42, RULE_functionCall);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 243;
+      match(TOKEN_ID);
+      state = 244;
+      match(TOKEN_LPAREN);
+      state = 246;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      if ((((_la) & ~0x3f) == 0 && ((1 << _la) & 66314295050240) != 0)) {
+        state = 245;
+        argList();
+      }
+
+      state = 248;
+      match(TOKEN_RPAREN);
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  ArgListContext argList() {
+    dynamic _localctx = ArgListContext(context, state);
+    enterRule(_localctx, 44, RULE_argList);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      state = 250;
+      expression(0);
+      state = 255;
+      errorHandler.sync(this);
+      _la = tokenStream.LA(1)!;
+      while (_la == TOKEN_COMMA) {
+        state = 251;
+        match(TOKEN_COMMA);
+        state = 252;
+        expression(0);
+        state = 257;
+        errorHandler.sync(this);
+        _la = tokenStream.LA(1)!;
+      }
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  ExpressionContext expression([int _p = 0]) {
+    final _parentctx = context;
+    final _parentState = state;
+    dynamic _localctx = ExpressionContext(context, _parentState);
+    var _prevctx = _localctx;
+    var _startState = 46;
+    enterRecursionRule(_localctx, 46, RULE_expression, _p);
+    int _la;
+    try {
+      int _alt;
+      enterOuterAlt(_localctx, 1);
+      state = 279;
+      errorHandler.sync(this);
+      switch (interpreter!.adaptivePredict(tokenStream, 23, context)) {
+      case 1:
+        _localctx = ParenExprContext(_localctx);
+        context = _localctx;
+        _prevctx = _localctx;
+
+        state = 259;
+        match(TOKEN_LPAREN);
+        state = 260;
+        expression(0);
+        state = 261;
+        match(TOKEN_RPAREN);
+        break;
+      case 2:
+        _localctx = CallExprContext(_localctx);
+        context = _localctx;
+        _prevctx = _localctx;
+        state = 263;
+        functionCall();
+        break;
+      case 3:
+        _localctx = ArrayLiteralContext(_localctx);
+        context = _localctx;
+        _prevctx = _localctx;
+        state = 264;
+        match(TOKEN_LBRACE);
+        state = 265;
+        expression(0);
+        state = 270;
+        errorHandler.sync(this);
+        _la = tokenStream.LA(1)!;
+        while (_la == TOKEN_COMMA) {
+          state = 266;
+          match(TOKEN_COMMA);
+          state = 267;
+          expression(0);
+          state = 272;
+          errorHandler.sync(this);
+          _la = tokenStream.LA(1)!;
+        }
+        state = 273;
+        match(TOKEN_RBRACE);
+        break;
+      case 4:
+        _localctx = IdExprContext(_localctx);
+        context = _localctx;
+        _prevctx = _localctx;
+        state = 275;
+        match(TOKEN_ID);
+        break;
+      case 5:
+        _localctx = IntExprContext(_localctx);
+        context = _localctx;
+        _prevctx = _localctx;
+        state = 276;
+        match(TOKEN_INT);
+        break;
+      case 6:
+        _localctx = FloatExprContext(_localctx);
+        context = _localctx;
+        _prevctx = _localctx;
+        state = 277;
+        match(TOKEN_FLOAT);
+        break;
+      case 7:
+        _localctx = StringExprContext(_localctx);
+        context = _localctx;
+        _prevctx = _localctx;
+        state = 278;
+        match(TOKEN_STRING);
+        break;
+      }
+      context!.stop = tokenStream.LT(-1);
+      state = 312;
+      errorHandler.sync(this);
+      _alt = interpreter!.adaptivePredict(tokenStream, 25, context);
+      while (_alt != 2 && _alt != ATN.INVALID_ALT_NUMBER) {
+        if (_alt == 1) {
+          if (parseListeners != null) triggerExitRuleEvent();
+          _prevctx = _localctx;
+          state = 310;
+          errorHandler.sync(this);
+          switch (interpreter!.adaptivePredict(tokenStream, 24, context)) {
+          case 1:
+            _localctx = MulDivExprContext(new ExpressionContext(_parentctx, _parentState));
+            pushNewRecursionContext(_localctx, _startState, RULE_expression);
+            state = 281;
+            if (!(precpred(context, 11))) {
+              throw FailedPredicateException(this, "precpred(context, 11)");
+            }
+            state = 282;
+            _localctx.op = tokenStream.LT(1);
+            _la = tokenStream.LA(1)!;
+            if (!((((_la) & ~0x3f) == 0 && ((1 << _la) & 14680064) != 0))) {
+              _localctx.op = errorHandler.recoverInline(this);
+            } else {
+              if ( tokenStream.LA(1)! == IntStream.EOF ) matchedEOF = true;
+              errorHandler.reportMatch(this);
+              consume();
+            }
+            state = 283;
+            expression(12);
+            break;
+          case 2:
+            _localctx = AddSubExprContext(new ExpressionContext(_parentctx, _parentState));
+            pushNewRecursionContext(_localctx, _startState, RULE_expression);
+            state = 284;
+            if (!(precpred(context, 10))) {
+              throw FailedPredicateException(this, "precpred(context, 10)");
+            }
+            state = 285;
+            _localctx.op = tokenStream.LT(1);
+            _la = tokenStream.LA(1)!;
+            if (!(_la == TOKEN_PLUS || _la == TOKEN_MINUS)) {
+              _localctx.op = errorHandler.recoverInline(this);
+            } else {
+              if ( tokenStream.LA(1)! == IntStream.EOF ) matchedEOF = true;
+              errorHandler.reportMatch(this);
+              consume();
+            }
+            state = 286;
+            expression(11);
+            break;
+          case 3:
+            _localctx = RelExprContext(new ExpressionContext(_parentctx, _parentState));
+            pushNewRecursionContext(_localctx, _startState, RULE_expression);
+            state = 287;
+            if (!(precpred(context, 9))) {
+              throw FailedPredicateException(this, "precpred(context, 9)");
+            }
+            state = 288;
+            _localctx.op = tokenStream.LT(1);
+            _la = tokenStream.LA(1)!;
+            if (!((((_la) & ~0x3f) == 0 && ((1 << _la) & 2013265920) != 0))) {
+              _localctx.op = errorHandler.recoverInline(this);
+            } else {
+              if ( tokenStream.LA(1)! == IntStream.EOF ) matchedEOF = true;
+              errorHandler.reportMatch(this);
+              consume();
+            }
+            state = 289;
+            expression(10);
+            break;
+          case 4:
+            _localctx = EqExprContext(new ExpressionContext(_parentctx, _parentState));
+            pushNewRecursionContext(_localctx, _startState, RULE_expression);
+            state = 290;
+            if (!(precpred(context, 8))) {
+              throw FailedPredicateException(this, "precpred(context, 8)");
+            }
+            state = 291;
+            _localctx.op = tokenStream.LT(1);
+            _la = tokenStream.LA(1)!;
+            if (!(_la == TOKEN_EQ || _la == TOKEN_NEQ)) {
+              _localctx.op = errorHandler.recoverInline(this);
+            } else {
+              if ( tokenStream.LA(1)! == IntStream.EOF ) matchedEOF = true;
+              errorHandler.reportMatch(this);
+              consume();
+            }
+            state = 292;
+            expression(9);
+            break;
+          case 5:
+            _localctx = LogicAndExprContext(new ExpressionContext(_parentctx, _parentState));
+            pushNewRecursionContext(_localctx, _startState, RULE_expression);
+            state = 293;
+            if (!(precpred(context, 7))) {
+              throw FailedPredicateException(this, "precpred(context, 7)");
+            }
+            state = 294;
+            _localctx.op = match(TOKEN_AND);
+            state = 295;
+            expression(8);
+            break;
+          case 6:
+            _localctx = LogicOrExprContext(new ExpressionContext(_parentctx, _parentState));
+            pushNewRecursionContext(_localctx, _startState, RULE_expression);
+            state = 296;
+            if (!(precpred(context, 6))) {
+              throw FailedPredicateException(this, "precpred(context, 6)");
+            }
+            state = 297;
+            _localctx.op = match(TOKEN_OR);
+            state = 298;
+            expression(7);
+            break;
+          case 7:
+            _localctx = AssignExprContext(new ExpressionContext(_parentctx, _parentState));
+            pushNewRecursionContext(_localctx, _startState, RULE_expression);
+            state = 299;
+            if (!(precpred(context, 5))) {
+              throw FailedPredicateException(this, "precpred(context, 5)");
+            }
+            state = 300;
+            match(TOKEN_ASSIGN);
+            state = 301;
+            expression(5);
+            break;
+          case 8:
+            _localctx = ArrayAccessExprContext(new ExpressionContext(_parentctx, _parentState));
+            pushNewRecursionContext(_localctx, _startState, RULE_expression);
+            state = 302;
+            if (!(precpred(context, 14))) {
+              throw FailedPredicateException(this, "precpred(context, 14)");
+            }
+            state = 303;
+            match(TOKEN_LBRACKET);
+            state = 304;
+            expression(0);
+            state = 305;
+            match(TOKEN_RBRACKET);
+            break;
+          case 9:
+            _localctx = MemberAccessExprContext(new ExpressionContext(_parentctx, _parentState));
+            pushNewRecursionContext(_localctx, _startState, RULE_expression);
+            state = 307;
+            if (!(precpred(context, 13))) {
+              throw FailedPredicateException(this, "precpred(context, 13)");
+            }
+            state = 308;
+            match(TOKEN_T__1);
+            state = 309;
+            match(TOKEN_ID);
+            break;
+          } 
+        }
+        state = 314;
+        errorHandler.sync(this);
+        _alt = interpreter!.adaptivePredict(tokenStream, 25, context);
+      }
+    } on RecognitionException catch (re) {
+      _localctx.exception = re;
+      errorHandler.reportError(this, re);
+      errorHandler.recover(this, re);
+    } finally {
+      unrollRecursionContexts(_parentctx);
+    }
+    return _localctx;
+  }
+
+  @override
+  bool sempred(RuleContext? _localctx, int ruleIndex, int predIndex) {
+    switch (ruleIndex) {
+    case 23:
+      return _expression_sempred(_localctx as ExpressionContext?, predIndex);
+    }
+    return true;
+  }
+  bool _expression_sempred(dynamic _localctx, int predIndex) {
+    switch (predIndex) {
+      case 0: return precpred(context, 11);
+      case 1: return precpred(context, 10);
+      case 2: return precpred(context, 9);
+      case 3: return precpred(context, 8);
+      case 4: return precpred(context, 7);
+      case 5: return precpred(context, 6);
+      case 6: return precpred(context, 5);
+      case 7: return precpred(context, 14);
+      case 8: return precpred(context, 13);
+    }
+    return true;
+  }
+
+  static const List<int> _serializedATN = [
+      4,1,48,316,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,
+      2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,
+      14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,7,20,
+      2,21,7,21,2,22,7,22,2,23,7,23,1,0,5,0,50,8,0,10,0,12,0,53,9,0,1,0,
+      1,0,1,1,1,1,1,1,1,1,3,1,61,8,1,1,2,1,2,1,2,1,2,5,2,67,8,2,10,2,12,
+      2,70,9,2,1,2,1,2,1,3,1,3,1,3,1,3,3,3,78,8,3,1,3,1,3,3,3,82,8,3,1,4,
+      1,4,1,4,1,4,3,4,88,8,4,1,4,1,4,1,4,1,5,1,5,1,5,1,5,5,5,97,8,5,10,5,
+      12,5,100,9,5,1,5,1,5,1,5,1,6,1,6,1,6,1,6,5,6,109,8,6,10,6,12,6,112,
+      9,6,1,6,1,6,1,6,1,7,1,7,1,7,5,7,120,8,7,10,7,12,7,123,9,7,1,8,1,8,
+      1,8,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,3,9,137,8,9,1,10,1,10,5,10,
+      141,8,10,10,10,12,10,144,9,10,1,10,1,10,1,11,1,11,1,11,1,11,1,11,1,
+      11,1,11,1,11,1,11,1,11,1,11,1,11,1,11,1,11,1,11,3,11,163,8,11,1,12,
+      1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,13,1,13,5,13,175,8,13,10,13,12,
+      13,178,9,13,5,13,180,8,13,10,13,12,13,183,9,13,1,14,1,14,1,14,1,14,
+      1,14,1,14,3,14,191,8,14,1,15,1,15,1,15,1,15,1,15,1,15,1,15,3,15,200,
+      8,15,1,15,3,15,203,8,15,1,15,1,15,3,15,207,8,15,1,15,1,15,1,15,1,16,
+      1,16,1,16,1,17,1,17,3,17,217,8,17,1,17,1,17,1,18,1,18,1,18,1,18,1,
+      18,1,18,1,18,3,18,228,8,18,1,19,1,19,1,19,1,19,1,19,1,19,1,20,1,20,
+      1,20,1,20,1,20,1,20,1,20,1,20,1,21,1,21,1,21,3,21,247,8,21,1,21,1,
+      21,1,22,1,22,1,22,5,22,254,8,22,10,22,12,22,257,9,22,1,23,1,23,1,23,
+      1,23,1,23,1,23,1,23,1,23,1,23,1,23,5,23,269,8,23,10,23,12,23,272,9,
+      23,1,23,1,23,1,23,1,23,1,23,1,23,3,23,280,8,23,1,23,1,23,1,23,1,23,
+      1,23,1,23,1,23,1,23,1,23,1,23,1,23,1,23,1,23,1,23,1,23,1,23,1,23,1,
+      23,1,23,1,23,1,23,1,23,1,23,1,23,1,23,1,23,1,23,1,23,1,23,5,23,311,
+      8,23,10,23,12,23,314,9,23,1,23,0,1,46,24,0,2,4,6,8,10,12,14,16,18,
+      20,22,24,26,28,30,32,34,36,38,40,42,44,46,0,4,1,0,21,23,1,0,19,20,
+      1,0,27,30,1,0,25,26,348,0,51,1,0,0,0,2,60,1,0,0,0,4,62,1,0,0,0,6,73,
+      1,0,0,0,8,83,1,0,0,0,10,92,1,0,0,0,12,104,1,0,0,0,14,116,1,0,0,0,16,
+      124,1,0,0,0,18,136,1,0,0,0,20,138,1,0,0,0,22,162,1,0,0,0,24,164,1,
+      0,0,0,26,181,1,0,0,0,28,190,1,0,0,0,30,192,1,0,0,0,32,211,1,0,0,0,
+      34,214,1,0,0,0,36,220,1,0,0,0,38,229,1,0,0,0,40,235,1,0,0,0,42,243,
+      1,0,0,0,44,250,1,0,0,0,46,279,1,0,0,0,48,50,3,2,1,0,49,48,1,0,0,0,
+      50,53,1,0,0,0,51,49,1,0,0,0,51,52,1,0,0,0,52,54,1,0,0,0,53,51,1,0,
+      0,0,54,55,5,0,0,1,55,1,1,0,0,0,56,61,3,4,2,0,57,61,3,8,4,0,58,61,3,
+      10,5,0,59,61,3,12,6,0,60,56,1,0,0,0,60,57,1,0,0,0,60,58,1,0,0,0,60,
+      59,1,0,0,0,61,3,1,0,0,0,62,63,3,18,9,0,63,68,3,6,3,0,64,65,5,33,0,
+      0,65,67,3,6,3,0,66,64,1,0,0,0,67,70,1,0,0,0,68,66,1,0,0,0,68,69,1,
+      0,0,0,69,71,1,0,0,0,70,68,1,0,0,0,71,72,5,34,0,0,72,5,1,0,0,0,73,77,
+      5,42,0,0,74,75,5,40,0,0,75,76,5,43,0,0,76,78,5,41,0,0,77,74,1,0,0,
+      0,77,78,1,0,0,0,78,81,1,0,0,0,79,80,5,24,0,0,80,82,3,46,23,0,81,79,
+      1,0,0,0,81,82,1,0,0,0,82,7,1,0,0,0,83,84,3,18,9,0,84,85,5,42,0,0,85,
+      87,5,36,0,0,86,88,3,14,7,0,87,86,1,0,0,0,87,88,1,0,0,0,88,89,1,0,0,
+      0,89,90,5,37,0,0,90,91,3,20,10,0,91,9,1,0,0,0,92,93,5,17,0,0,93,94,
+      5,42,0,0,94,98,5,38,0,0,95,97,3,4,2,0,96,95,1,0,0,0,97,100,1,0,0,0,
+      98,96,1,0,0,0,98,99,1,0,0,0,99,101,1,0,0,0,100,98,1,0,0,0,101,102,
+      5,39,0,0,102,103,5,34,0,0,103,11,1,0,0,0,104,105,5,18,0,0,105,106,
+      5,42,0,0,106,110,5,38,0,0,107,109,3,4,2,0,108,107,1,0,0,0,109,112,
+      1,0,0,0,110,108,1,0,0,0,110,111,1,0,0,0,111,113,1,0,0,0,112,110,1,
+      0,0,0,113,114,5,39,0,0,114,115,5,34,0,0,115,13,1,0,0,0,116,121,3,16,
+      8,0,117,118,5,33,0,0,118,120,3,16,8,0,119,117,1,0,0,0,120,123,1,0,
+      0,0,121,119,1,0,0,0,121,122,1,0,0,0,122,15,1,0,0,0,123,121,1,0,0,0,
+      124,125,3,18,9,0,125,126,5,42,0,0,126,17,1,0,0,0,127,137,5,7,0,0,128,
+      137,5,8,0,0,129,137,5,9,0,0,130,137,5,10,0,0,131,137,5,1,0,0,132,133,
+      5,17,0,0,133,137,5,42,0,0,134,135,5,18,0,0,135,137,5,42,0,0,136,127,
+      1,0,0,0,136,128,1,0,0,0,136,129,1,0,0,0,136,130,1,0,0,0,136,131,1,
+      0,0,0,136,132,1,0,0,0,136,134,1,0,0,0,137,19,1,0,0,0,138,142,5,38,
+      0,0,139,141,3,22,11,0,140,139,1,0,0,0,141,144,1,0,0,0,142,140,1,0,
+      0,0,142,143,1,0,0,0,143,145,1,0,0,0,144,142,1,0,0,0,145,146,5,39,0,
+      0,146,21,1,0,0,0,147,163,3,4,2,0,148,163,3,10,5,0,149,163,3,12,6,0,
+      150,163,3,36,18,0,151,163,3,38,19,0,152,163,3,34,17,0,153,154,3,46,
+      23,0,154,155,5,34,0,0,155,163,1,0,0,0,156,163,3,24,12,0,157,163,3,
+      30,15,0,158,163,3,40,20,0,159,163,3,32,16,0,160,163,3,20,10,0,161,
+      163,5,34,0,0,162,147,1,0,0,0,162,148,1,0,0,0,162,149,1,0,0,0,162,150,
+      1,0,0,0,162,151,1,0,0,0,162,152,1,0,0,0,162,153,1,0,0,0,162,156,1,
+      0,0,0,162,157,1,0,0,0,162,158,1,0,0,0,162,159,1,0,0,0,162,160,1,0,
+      0,0,162,161,1,0,0,0,163,23,1,0,0,0,164,165,5,11,0,0,165,166,5,36,0,
+      0,166,167,3,46,23,0,167,168,5,37,0,0,168,169,5,38,0,0,169,170,3,26,
+      13,0,170,171,5,39,0,0,171,25,1,0,0,0,172,176,3,28,14,0,173,175,3,22,
+      11,0,174,173,1,0,0,0,175,178,1,0,0,0,176,174,1,0,0,0,176,177,1,0,0,
+      0,177,180,1,0,0,0,178,176,1,0,0,0,179,172,1,0,0,0,180,183,1,0,0,0,
+      181,179,1,0,0,0,181,182,1,0,0,0,182,27,1,0,0,0,183,181,1,0,0,0,184,
+      185,5,12,0,0,185,186,3,46,23,0,186,187,5,35,0,0,187,191,1,0,0,0,188,
+      189,5,13,0,0,189,191,5,35,0,0,190,184,1,0,0,0,190,188,1,0,0,0,191,
+      29,1,0,0,0,192,193,5,14,0,0,193,199,5,36,0,0,194,200,3,4,2,0,195,196,
+      3,46,23,0,196,197,5,34,0,0,197,200,1,0,0,0,198,200,5,34,0,0,199,194,
+      1,0,0,0,199,195,1,0,0,0,199,198,1,0,0,0,200,202,1,0,0,0,201,203,3,
+      46,23,0,202,201,1,0,0,0,202,203,1,0,0,0,203,204,1,0,0,0,204,206,5,
+      34,0,0,205,207,3,46,23,0,206,205,1,0,0,0,206,207,1,0,0,0,207,208,1,
+      0,0,0,208,209,5,37,0,0,209,210,3,22,11,0,210,31,1,0,0,0,211,212,5,
+      16,0,0,212,213,5,34,0,0,213,33,1,0,0,0,214,216,5,6,0,0,215,217,3,46,
+      23,0,216,215,1,0,0,0,216,217,1,0,0,0,217,218,1,0,0,0,218,219,5,34,
+      0,0,219,35,1,0,0,0,220,221,5,3,0,0,221,222,5,36,0,0,222,223,3,46,23,
+      0,223,224,5,37,0,0,224,227,3,22,11,0,225,226,5,4,0,0,226,228,3,22,
+      11,0,227,225,1,0,0,0,227,228,1,0,0,0,228,37,1,0,0,0,229,230,5,5,0,
+      0,230,231,5,36,0,0,231,232,3,46,23,0,232,233,5,37,0,0,233,234,3,22,
+      11,0,234,39,1,0,0,0,235,236,5,15,0,0,236,237,3,22,11,0,237,238,5,5,
+      0,0,238,239,5,36,0,0,239,240,3,46,23,0,240,241,5,37,0,0,241,242,5,
+      34,0,0,242,41,1,0,0,0,243,244,5,42,0,0,244,246,5,36,0,0,245,247,3,
+      44,22,0,246,245,1,0,0,0,246,247,1,0,0,0,247,248,1,0,0,0,248,249,5,
+      37,0,0,249,43,1,0,0,0,250,255,3,46,23,0,251,252,5,33,0,0,252,254,3,
+      46,23,0,253,251,1,0,0,0,254,257,1,0,0,0,255,253,1,0,0,0,255,256,1,
+      0,0,0,256,45,1,0,0,0,257,255,1,0,0,0,258,259,6,23,-1,0,259,260,5,36,
+      0,0,260,261,3,46,23,0,261,262,5,37,0,0,262,280,1,0,0,0,263,280,3,42,
+      21,0,264,265,5,38,0,0,265,270,3,46,23,0,266,267,5,33,0,0,267,269,3,
+      46,23,0,268,266,1,0,0,0,269,272,1,0,0,0,270,268,1,0,0,0,270,271,1,
+      0,0,0,271,273,1,0,0,0,272,270,1,0,0,0,273,274,5,39,0,0,274,280,1,0,
+      0,0,275,280,5,42,0,0,276,280,5,43,0,0,277,280,5,44,0,0,278,280,5,45,
+      0,0,279,258,1,0,0,0,279,263,1,0,0,0,279,264,1,0,0,0,279,275,1,0,0,
+      0,279,276,1,0,0,0,279,277,1,0,0,0,279,278,1,0,0,0,280,312,1,0,0,0,
+      281,282,10,11,0,0,282,283,7,0,0,0,283,311,3,46,23,12,284,285,10,10,
+      0,0,285,286,7,1,0,0,286,311,3,46,23,11,287,288,10,9,0,0,288,289,7,
+      2,0,0,289,311,3,46,23,10,290,291,10,8,0,0,291,292,7,3,0,0,292,311,
+      3,46,23,9,293,294,10,7,0,0,294,295,5,31,0,0,295,311,3,46,23,8,296,
+      297,10,6,0,0,297,298,5,32,0,0,298,311,3,46,23,7,299,300,10,5,0,0,300,
+      301,5,24,0,0,301,311,3,46,23,5,302,303,10,14,0,0,303,304,5,40,0,0,
+      304,305,3,46,23,0,305,306,5,41,0,0,306,311,1,0,0,0,307,308,10,13,0,
+      0,308,309,5,2,0,0,309,311,5,42,0,0,310,281,1,0,0,0,310,284,1,0,0,0,
+      310,287,1,0,0,0,310,290,1,0,0,0,310,293,1,0,0,0,310,296,1,0,0,0,310,
+      299,1,0,0,0,310,302,1,0,0,0,310,307,1,0,0,0,311,314,1,0,0,0,312,310,
+      1,0,0,0,312,313,1,0,0,0,313,47,1,0,0,0,314,312,1,0,0,0,26,51,60,68,
+      77,81,87,98,110,121,136,142,162,176,181,190,199,202,206,216,227,246,
+      255,270,279,310,312
+  ];
+
+  static final ATN _ATN =
+      ATNDeserializer().deserialize(_serializedATN);
+}
+class ProgramContext extends ParserRuleContext {
+  TerminalNode? EOF() => getToken(CSubsetParser.TOKEN_EOF, 0);
+  List<DeclarationContext> declarations() => getRuleContexts<DeclarationContext>();
+  DeclarationContext? declaration(int i) => getRuleContext<DeclarationContext>(i);
+  ProgramContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_program;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterProgram(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitProgram(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitProgram(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class DeclarationContext extends ParserRuleContext {
+  VarDeclContext? varDecl() => getRuleContext<VarDeclContext>(0);
+  FunctionDeclContext? functionDecl() => getRuleContext<FunctionDeclContext>(0);
+  StructDeclContext? structDecl() => getRuleContext<StructDeclContext>(0);
+  UnionDeclContext? unionDecl() => getRuleContext<UnionDeclContext>(0);
+  DeclarationContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_declaration;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterDeclaration(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitDeclaration(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitDeclaration(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class VarDeclContext extends ParserRuleContext {
+  TypeSpecifierContext? typeSpecifier() => getRuleContext<TypeSpecifierContext>(0);
+  List<VarDeclaratorContext> varDeclarators() => getRuleContexts<VarDeclaratorContext>();
+  VarDeclaratorContext? varDeclarator(int i) => getRuleContext<VarDeclaratorContext>(i);
+  TerminalNode? SEMI() => getToken(CSubsetParser.TOKEN_SEMI, 0);
+  List<TerminalNode> COMMAs() => getTokens(CSubsetParser.TOKEN_COMMA);
+  TerminalNode? COMMA(int i) => getToken(CSubsetParser.TOKEN_COMMA, i);
+  VarDeclContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_varDecl;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterVarDecl(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitVarDecl(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitVarDecl(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class VarDeclaratorContext extends ParserRuleContext {
+  TerminalNode? ID() => getToken(CSubsetParser.TOKEN_ID, 0);
+  TerminalNode? LBRACKET() => getToken(CSubsetParser.TOKEN_LBRACKET, 0);
+  TerminalNode? INT() => getToken(CSubsetParser.TOKEN_INT, 0);
+  TerminalNode? RBRACKET() => getToken(CSubsetParser.TOKEN_RBRACKET, 0);
+  TerminalNode? ASSIGN() => getToken(CSubsetParser.TOKEN_ASSIGN, 0);
+  ExpressionContext? expression() => getRuleContext<ExpressionContext>(0);
+  VarDeclaratorContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_varDeclarator;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterVarDeclarator(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitVarDeclarator(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitVarDeclarator(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class FunctionDeclContext extends ParserRuleContext {
+  BlockContext? funcBody;
+  TypeSpecifierContext? typeSpecifier() => getRuleContext<TypeSpecifierContext>(0);
+  TerminalNode? ID() => getToken(CSubsetParser.TOKEN_ID, 0);
+  TerminalNode? LPAREN() => getToken(CSubsetParser.TOKEN_LPAREN, 0);
+  TerminalNode? RPAREN() => getToken(CSubsetParser.TOKEN_RPAREN, 0);
+  BlockContext? block() => getRuleContext<BlockContext>(0);
+  ParamListContext? paramList() => getRuleContext<ParamListContext>(0);
+  FunctionDeclContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_functionDecl;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterFunctionDecl(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitFunctionDecl(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitFunctionDecl(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class StructDeclContext extends ParserRuleContext {
+  TerminalNode? STRUCT() => getToken(CSubsetParser.TOKEN_STRUCT, 0);
+  TerminalNode? ID() => getToken(CSubsetParser.TOKEN_ID, 0);
+  TerminalNode? LBRACE() => getToken(CSubsetParser.TOKEN_LBRACE, 0);
+  TerminalNode? RBRACE() => getToken(CSubsetParser.TOKEN_RBRACE, 0);
+  TerminalNode? SEMI() => getToken(CSubsetParser.TOKEN_SEMI, 0);
+  List<VarDeclContext> varDecls() => getRuleContexts<VarDeclContext>();
+  VarDeclContext? varDecl(int i) => getRuleContext<VarDeclContext>(i);
+  StructDeclContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_structDecl;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterStructDecl(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitStructDecl(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitStructDecl(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class UnionDeclContext extends ParserRuleContext {
+  TerminalNode? UNION() => getToken(CSubsetParser.TOKEN_UNION, 0);
+  TerminalNode? ID() => getToken(CSubsetParser.TOKEN_ID, 0);
+  TerminalNode? LBRACE() => getToken(CSubsetParser.TOKEN_LBRACE, 0);
+  TerminalNode? RBRACE() => getToken(CSubsetParser.TOKEN_RBRACE, 0);
+  TerminalNode? SEMI() => getToken(CSubsetParser.TOKEN_SEMI, 0);
+  List<VarDeclContext> varDecls() => getRuleContexts<VarDeclContext>();
+  VarDeclContext? varDecl(int i) => getRuleContext<VarDeclContext>(i);
+  UnionDeclContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_unionDecl;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterUnionDecl(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitUnionDecl(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitUnionDecl(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class ParamListContext extends ParserRuleContext {
+  List<ParamContext> params() => getRuleContexts<ParamContext>();
+  ParamContext? param(int i) => getRuleContext<ParamContext>(i);
+  List<TerminalNode> COMMAs() => getTokens(CSubsetParser.TOKEN_COMMA);
+  TerminalNode? COMMA(int i) => getToken(CSubsetParser.TOKEN_COMMA, i);
+  ParamListContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_paramList;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterParamList(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitParamList(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitParamList(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class ParamContext extends ParserRuleContext {
+  TypeSpecifierContext? typeSpecifier() => getRuleContext<TypeSpecifierContext>(0);
+  TerminalNode? ID() => getToken(CSubsetParser.TOKEN_ID, 0);
+  ParamContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_param;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterParam(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitParam(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitParam(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class TypeSpecifierContext extends ParserRuleContext {
+  TypeSpecifierContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_typeSpecifier;
+ 
+  @override
+  void copyFrom(ParserRuleContext ctx) {
+    super.copyFrom(ctx);
+  }
+}
+
+class BlockContext extends ParserRuleContext {
+  TerminalNode? LBRACE() => getToken(CSubsetParser.TOKEN_LBRACE, 0);
+  TerminalNode? RBRACE() => getToken(CSubsetParser.TOKEN_RBRACE, 0);
+  List<StatementContext> statements() => getRuleContexts<StatementContext>();
+  StatementContext? statement(int i) => getRuleContext<StatementContext>(i);
+  BlockContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_block;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterBlock(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitBlock(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitBlock(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class StatementContext extends ParserRuleContext {
+  StatementContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_statement;
+ 
+  @override
+  void copyFrom(ParserRuleContext ctx) {
+    super.copyFrom(ctx);
+  }
+}
+
+class SwitchStmtContext extends ParserRuleContext {
+  TerminalNode? SWITCH() => getToken(CSubsetParser.TOKEN_SWITCH, 0);
+  TerminalNode? LPAREN() => getToken(CSubsetParser.TOKEN_LPAREN, 0);
+  ExpressionContext? expression() => getRuleContext<ExpressionContext>(0);
+  TerminalNode? RPAREN() => getToken(CSubsetParser.TOKEN_RPAREN, 0);
+  TerminalNode? LBRACE() => getToken(CSubsetParser.TOKEN_LBRACE, 0);
+  SwitchBlockContext? switchBlock() => getRuleContext<SwitchBlockContext>(0);
+  TerminalNode? RBRACE() => getToken(CSubsetParser.TOKEN_RBRACE, 0);
+  SwitchStmtContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_switchStmt;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterSwitchStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitSwitchStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitSwitchStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class SwitchBlockContext extends ParserRuleContext {
+  List<CaseLabelContext> caseLabels() => getRuleContexts<CaseLabelContext>();
+  CaseLabelContext? caseLabel(int i) => getRuleContext<CaseLabelContext>(i);
+  List<StatementContext> statements() => getRuleContexts<StatementContext>();
+  StatementContext? statement(int i) => getRuleContext<StatementContext>(i);
+  SwitchBlockContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_switchBlock;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterSwitchBlock(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitSwitchBlock(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitSwitchBlock(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class CaseLabelContext extends ParserRuleContext {
+  CaseLabelContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_caseLabel;
+ 
+  @override
+  void copyFrom(ParserRuleContext ctx) {
+    super.copyFrom(ctx);
+  }
+}
+
+class ForStmtContext extends ParserRuleContext {
+  TerminalNode? FOR() => getToken(CSubsetParser.TOKEN_FOR, 0);
+  TerminalNode? LPAREN() => getToken(CSubsetParser.TOKEN_LPAREN, 0);
+  List<TerminalNode> SEMIs() => getTokens(CSubsetParser.TOKEN_SEMI);
+  TerminalNode? SEMI(int i) => getToken(CSubsetParser.TOKEN_SEMI, i);
+  TerminalNode? RPAREN() => getToken(CSubsetParser.TOKEN_RPAREN, 0);
+  StatementContext? statement() => getRuleContext<StatementContext>(0);
+  VarDeclContext? varDecl() => getRuleContext<VarDeclContext>(0);
+  List<ExpressionContext> expressions() => getRuleContexts<ExpressionContext>();
+  ExpressionContext? expression(int i) => getRuleContext<ExpressionContext>(i);
+  ForStmtContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_forStmt;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterForStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitForStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitForStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class BreakStmtContext extends ParserRuleContext {
+  TerminalNode? BREAK() => getToken(CSubsetParser.TOKEN_BREAK, 0);
+  TerminalNode? SEMI() => getToken(CSubsetParser.TOKEN_SEMI, 0);
+  BreakStmtContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_breakStmt;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterBreakStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitBreakStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitBreakStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class ReturnStmtContext extends ParserRuleContext {
+  TerminalNode? RETURN() => getToken(CSubsetParser.TOKEN_RETURN, 0);
+  TerminalNode? SEMI() => getToken(CSubsetParser.TOKEN_SEMI, 0);
+  ExpressionContext? expression() => getRuleContext<ExpressionContext>(0);
+  ReturnStmtContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_returnStmt;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterReturnStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitReturnStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitReturnStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class IfStmtContext extends ParserRuleContext {
+  TerminalNode? IF() => getToken(CSubsetParser.TOKEN_IF, 0);
+  TerminalNode? LPAREN() => getToken(CSubsetParser.TOKEN_LPAREN, 0);
+  ExpressionContext? expression() => getRuleContext<ExpressionContext>(0);
+  TerminalNode? RPAREN() => getToken(CSubsetParser.TOKEN_RPAREN, 0);
+  List<StatementContext> statements() => getRuleContexts<StatementContext>();
+  StatementContext? statement(int i) => getRuleContext<StatementContext>(i);
+  TerminalNode? ELSE() => getToken(CSubsetParser.TOKEN_ELSE, 0);
+  IfStmtContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_ifStmt;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterIfStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitIfStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitIfStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class WhileStmtContext extends ParserRuleContext {
+  TerminalNode? WHILE() => getToken(CSubsetParser.TOKEN_WHILE, 0);
+  TerminalNode? LPAREN() => getToken(CSubsetParser.TOKEN_LPAREN, 0);
+  ExpressionContext? expression() => getRuleContext<ExpressionContext>(0);
+  TerminalNode? RPAREN() => getToken(CSubsetParser.TOKEN_RPAREN, 0);
+  StatementContext? statement() => getRuleContext<StatementContext>(0);
+  WhileStmtContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_whileStmt;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterWhileStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitWhileStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitWhileStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class DoWhileStmtContext extends ParserRuleContext {
+  TerminalNode? DO() => getToken(CSubsetParser.TOKEN_DO, 0);
+  StatementContext? statement() => getRuleContext<StatementContext>(0);
+  TerminalNode? WHILE() => getToken(CSubsetParser.TOKEN_WHILE, 0);
+  TerminalNode? LPAREN() => getToken(CSubsetParser.TOKEN_LPAREN, 0);
+  ExpressionContext? expression() => getRuleContext<ExpressionContext>(0);
+  TerminalNode? RPAREN() => getToken(CSubsetParser.TOKEN_RPAREN, 0);
+  TerminalNode? SEMI() => getToken(CSubsetParser.TOKEN_SEMI, 0);
+  DoWhileStmtContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_doWhileStmt;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterDoWhileStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitDoWhileStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitDoWhileStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class FunctionCallContext extends ParserRuleContext {
+  TerminalNode? ID() => getToken(CSubsetParser.TOKEN_ID, 0);
+  TerminalNode? LPAREN() => getToken(CSubsetParser.TOKEN_LPAREN, 0);
+  TerminalNode? RPAREN() => getToken(CSubsetParser.TOKEN_RPAREN, 0);
+  ArgListContext? argList() => getRuleContext<ArgListContext>(0);
+  FunctionCallContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_functionCall;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterFunctionCall(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitFunctionCall(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitFunctionCall(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class ArgListContext extends ParserRuleContext {
+  List<ExpressionContext> expressions() => getRuleContexts<ExpressionContext>();
+  ExpressionContext? expression(int i) => getRuleContext<ExpressionContext>(i);
+  List<TerminalNode> COMMAs() => getTokens(CSubsetParser.TOKEN_COMMA);
+  TerminalNode? COMMA(int i) => getToken(CSubsetParser.TOKEN_COMMA, i);
+  ArgListContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_argList;
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterArgList(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitArgList(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitArgList(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class ExpressionContext extends ParserRuleContext {
+  ExpressionContext([ParserRuleContext? parent, int? invokingState]) : super(parent, invokingState);
+  @override
+  int get ruleIndex => RULE_expression;
+ 
+  @override
+  void copyFrom(ParserRuleContext ctx) {
+    super.copyFrom(ctx);
+  }
+}
+
+class CharTypeContext extends TypeSpecifierContext {
+  TerminalNode? CHAR_TYPE() => getToken(CSubsetParser.TOKEN_CHAR_TYPE, 0);
+  CharTypeContext(TypeSpecifierContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterCharType(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitCharType(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitCharType(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class FloatTypeContext extends TypeSpecifierContext {
+  TerminalNode? FLOAT_TYPE() => getToken(CSubsetParser.TOKEN_FLOAT_TYPE, 0);
+  FloatTypeContext(TypeSpecifierContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterFloatType(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitFloatType(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitFloatType(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class StructTypeContext extends TypeSpecifierContext {
+  TerminalNode? STRUCT() => getToken(CSubsetParser.TOKEN_STRUCT, 0);
+  TerminalNode? ID() => getToken(CSubsetParser.TOKEN_ID, 0);
+  StructTypeContext(TypeSpecifierContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterStructType(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitStructType(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitStructType(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class IntTypeContext extends TypeSpecifierContext {
+  TerminalNode? INT_TYPE() => getToken(CSubsetParser.TOKEN_INT_TYPE, 0);
+  IntTypeContext(TypeSpecifierContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterIntType(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitIntType(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitIntType(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class StringTypeContext extends TypeSpecifierContext {
+  StringTypeContext(TypeSpecifierContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterStringType(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitStringType(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitStringType(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class VoidTypeContext extends TypeSpecifierContext {
+  TerminalNode? VOID_TYPE() => getToken(CSubsetParser.TOKEN_VOID_TYPE, 0);
+  VoidTypeContext(TypeSpecifierContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterVoidType(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitVoidType(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitVoidType(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class UnionTypeContext extends TypeSpecifierContext {
+  TerminalNode? UNION() => getToken(CSubsetParser.TOKEN_UNION, 0);
+  TerminalNode? ID() => getToken(CSubsetParser.TOKEN_ID, 0);
+  UnionTypeContext(TypeSpecifierContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterUnionType(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitUnionType(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitUnionType(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}class EmptyStatementContext extends StatementContext {
+  TerminalNode? SEMI() => getToken(CSubsetParser.TOKEN_SEMI, 0);
+  EmptyStatementContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterEmptyStatement(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitEmptyStatement(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitEmptyStatement(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class BlockStatementContext extends StatementContext {
+  BlockContext? block() => getRuleContext<BlockContext>(0);
+  BlockStatementContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterBlockStatement(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitBlockStatement(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitBlockStatement(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class ForStatementContext extends StatementContext {
+  ForStmtContext? forStmt() => getRuleContext<ForStmtContext>(0);
+  ForStatementContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterForStatement(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitForStatement(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitForStatement(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class BreakStatementContext extends StatementContext {
+  BreakStmtContext? breakStmt() => getRuleContext<BreakStmtContext>(0);
+  BreakStatementContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterBreakStatement(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitBreakStatement(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitBreakStatement(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class IfStatementContext extends StatementContext {
+  IfStmtContext? ifStmt() => getRuleContext<IfStmtContext>(0);
+  IfStatementContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterIfStatement(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitIfStatement(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitIfStatement(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class ReturnStatementContext extends StatementContext {
+  ReturnStmtContext? returnStmt() => getRuleContext<ReturnStmtContext>(0);
+  ReturnStatementContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterReturnStatement(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitReturnStatement(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitReturnStatement(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class SwitchStatementContext extends StatementContext {
+  SwitchStmtContext? switchStmt() => getRuleContext<SwitchStmtContext>(0);
+  SwitchStatementContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterSwitchStatement(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitSwitchStatement(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitSwitchStatement(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class WhileStatementContext extends StatementContext {
+  WhileStmtContext? whileStmt() => getRuleContext<WhileStmtContext>(0);
+  WhileStatementContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterWhileStatement(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitWhileStatement(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitWhileStatement(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class UnionDeclStmtContext extends StatementContext {
+  UnionDeclContext? unionDecl() => getRuleContext<UnionDeclContext>(0);
+  UnionDeclStmtContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterUnionDeclStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitUnionDeclStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitUnionDeclStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class ExprStatementContext extends StatementContext {
+  ExpressionContext? expression() => getRuleContext<ExpressionContext>(0);
+  TerminalNode? SEMI() => getToken(CSubsetParser.TOKEN_SEMI, 0);
+  ExprStatementContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterExprStatement(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitExprStatement(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitExprStatement(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class DoWhileStatementContext extends StatementContext {
+  DoWhileStmtContext? doWhileStmt() => getRuleContext<DoWhileStmtContext>(0);
+  DoWhileStatementContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterDoWhileStatement(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitDoWhileStatement(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitDoWhileStatement(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class StructDeclStmtContext extends StatementContext {
+  StructDeclContext? structDecl() => getRuleContext<StructDeclContext>(0);
+  StructDeclStmtContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterStructDeclStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitStructDeclStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitStructDeclStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class VarDeclStmtContext extends StatementContext {
+  VarDeclContext? varDecl() => getRuleContext<VarDeclContext>(0);
+  VarDeclStmtContext(StatementContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterVarDeclStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitVarDeclStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitVarDeclStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}class CaseStmtContext extends CaseLabelContext {
+  TerminalNode? CASE() => getToken(CSubsetParser.TOKEN_CASE, 0);
+  ExpressionContext? expression() => getRuleContext<ExpressionContext>(0);
+  TerminalNode? COLON() => getToken(CSubsetParser.TOKEN_COLON, 0);
+  CaseStmtContext(CaseLabelContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterCaseStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitCaseStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitCaseStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class DefaultStmtContext extends CaseLabelContext {
+  TerminalNode? DEFAULT() => getToken(CSubsetParser.TOKEN_DEFAULT, 0);
+  TerminalNode? COLON() => getToken(CSubsetParser.TOKEN_COLON, 0);
+  DefaultStmtContext(CaseLabelContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterDefaultStmt(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitDefaultStmt(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitDefaultStmt(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}class LogicOrExprContext extends ExpressionContext {
+  Token? op;
+  List<ExpressionContext> expressions() => getRuleContexts<ExpressionContext>();
+  ExpressionContext? expression(int i) => getRuleContext<ExpressionContext>(i);
+  TerminalNode? OR() => getToken(CSubsetParser.TOKEN_OR, 0);
+  LogicOrExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterLogicOrExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitLogicOrExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitLogicOrExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class IntExprContext extends ExpressionContext {
+  TerminalNode? INT() => getToken(CSubsetParser.TOKEN_INT, 0);
+  IntExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterIntExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitIntExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitIntExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class AddSubExprContext extends ExpressionContext {
+  Token? op;
+  List<ExpressionContext> expressions() => getRuleContexts<ExpressionContext>();
+  ExpressionContext? expression(int i) => getRuleContext<ExpressionContext>(i);
+  TerminalNode? PLUS() => getToken(CSubsetParser.TOKEN_PLUS, 0);
+  TerminalNode? MINUS() => getToken(CSubsetParser.TOKEN_MINUS, 0);
+  AddSubExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterAddSubExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitAddSubExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitAddSubExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class ArrayLiteralContext extends ExpressionContext {
+  TerminalNode? LBRACE() => getToken(CSubsetParser.TOKEN_LBRACE, 0);
+  List<ExpressionContext> expressions() => getRuleContexts<ExpressionContext>();
+  ExpressionContext? expression(int i) => getRuleContext<ExpressionContext>(i);
+  TerminalNode? RBRACE() => getToken(CSubsetParser.TOKEN_RBRACE, 0);
+  List<TerminalNode> COMMAs() => getTokens(CSubsetParser.TOKEN_COMMA);
+  TerminalNode? COMMA(int i) => getToken(CSubsetParser.TOKEN_COMMA, i);
+  ArrayLiteralContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterArrayLiteral(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitArrayLiteral(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitArrayLiteral(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class ParenExprContext extends ExpressionContext {
+  TerminalNode? LPAREN() => getToken(CSubsetParser.TOKEN_LPAREN, 0);
+  ExpressionContext? expression() => getRuleContext<ExpressionContext>(0);
+  TerminalNode? RPAREN() => getToken(CSubsetParser.TOKEN_RPAREN, 0);
+  ParenExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterParenExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitParenExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitParenExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class StringExprContext extends ExpressionContext {
+  TerminalNode? STRING() => getToken(CSubsetParser.TOKEN_STRING, 0);
+  StringExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterStringExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitStringExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitStringExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class FloatExprContext extends ExpressionContext {
+  TerminalNode? FLOAT() => getToken(CSubsetParser.TOKEN_FLOAT, 0);
+  FloatExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterFloatExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitFloatExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitFloatExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class EqExprContext extends ExpressionContext {
+  Token? op;
+  List<ExpressionContext> expressions() => getRuleContexts<ExpressionContext>();
+  ExpressionContext? expression(int i) => getRuleContext<ExpressionContext>(i);
+  TerminalNode? EQ() => getToken(CSubsetParser.TOKEN_EQ, 0);
+  TerminalNode? NEQ() => getToken(CSubsetParser.TOKEN_NEQ, 0);
+  EqExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterEqExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitEqExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitEqExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class ArrayAccessExprContext extends ExpressionContext {
+  List<ExpressionContext> expressions() => getRuleContexts<ExpressionContext>();
+  ExpressionContext? expression(int i) => getRuleContext<ExpressionContext>(i);
+  TerminalNode? LBRACKET() => getToken(CSubsetParser.TOKEN_LBRACKET, 0);
+  TerminalNode? RBRACKET() => getToken(CSubsetParser.TOKEN_RBRACKET, 0);
+  ArrayAccessExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterArrayAccessExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitArrayAccessExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitArrayAccessExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class LogicAndExprContext extends ExpressionContext {
+  Token? op;
+  List<ExpressionContext> expressions() => getRuleContexts<ExpressionContext>();
+  ExpressionContext? expression(int i) => getRuleContext<ExpressionContext>(i);
+  TerminalNode? AND() => getToken(CSubsetParser.TOKEN_AND, 0);
+  LogicAndExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterLogicAndExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitLogicAndExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitLogicAndExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class MemberAccessExprContext extends ExpressionContext {
+  ExpressionContext? expression() => getRuleContext<ExpressionContext>(0);
+  TerminalNode? ID() => getToken(CSubsetParser.TOKEN_ID, 0);
+  MemberAccessExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterMemberAccessExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitMemberAccessExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitMemberAccessExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class CallExprContext extends ExpressionContext {
+  FunctionCallContext? functionCall() => getRuleContext<FunctionCallContext>(0);
+  CallExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterCallExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitCallExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitCallExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class RelExprContext extends ExpressionContext {
+  Token? op;
+  List<ExpressionContext> expressions() => getRuleContexts<ExpressionContext>();
+  ExpressionContext? expression(int i) => getRuleContext<ExpressionContext>(i);
+  TerminalNode? LT() => getToken(CSubsetParser.TOKEN_LT, 0);
+  TerminalNode? GT() => getToken(CSubsetParser.TOKEN_GT, 0);
+  TerminalNode? LE() => getToken(CSubsetParser.TOKEN_LE, 0);
+  TerminalNode? GE() => getToken(CSubsetParser.TOKEN_GE, 0);
+  RelExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterRelExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitRelExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitRelExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class MulDivExprContext extends ExpressionContext {
+  Token? op;
+  List<ExpressionContext> expressions() => getRuleContexts<ExpressionContext>();
+  ExpressionContext? expression(int i) => getRuleContext<ExpressionContext>(i);
+  TerminalNode? MULT() => getToken(CSubsetParser.TOKEN_MULT, 0);
+  TerminalNode? DIV() => getToken(CSubsetParser.TOKEN_DIV, 0);
+  TerminalNode? MOD() => getToken(CSubsetParser.TOKEN_MOD, 0);
+  MulDivExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterMulDivExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitMulDivExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitMulDivExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class AssignExprContext extends ExpressionContext {
+  List<ExpressionContext> expressions() => getRuleContexts<ExpressionContext>();
+  ExpressionContext? expression(int i) => getRuleContext<ExpressionContext>(i);
+  TerminalNode? ASSIGN() => getToken(CSubsetParser.TOKEN_ASSIGN, 0);
+  AssignExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterAssignExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitAssignExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitAssignExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}
+
+class IdExprContext extends ExpressionContext {
+  TerminalNode? ID() => getToken(CSubsetParser.TOKEN_ID, 0);
+  IdExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+  @override
+  void enterRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.enterIdExpr(this);
+  }
+  @override
+  void exitRule(ParseTreeListener listener) {
+    if (listener is CSubsetListener) listener.exitIdExpr(this);
+  }
+  @override
+  T? accept<T>(ParseTreeVisitor<T> visitor) {
+    if (visitor is CSubsetVisitor<T>) {
+     return visitor.visitIdExpr(this);
+    } else {
+    	return visitor.visitChildren(this);
+    }
+  }
+}

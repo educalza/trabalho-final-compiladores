@@ -1,83 +1,115 @@
+// Teste Abrangente do CSubset
+// Cobre: Tipos, Arrays, Controle de Fluxo, Funções, Structs, Unions, IO,
+// Conversores
+
+#define PI 3.14159
+#define MSG "Ola Mundo"
+
+struct Point {
+  int x;
+  int y;
+};
+
+union Data {
+  int i;
+  float f;
+};
+
+// Declaração de função sem retorno
+void saudacao(string nome) { printf("Ola, %s!\n", nome); }
+
+// Declaração de função com retorno
+int soma(int a, int b) { return a + b; }
+
+// Recursão
+int fatorial(int n) {
+  if (n <= 1)
+    return 1;
+  return n * fatorial(n - 1);
+}
+
 void main() {
-    print("=== TESTE COMPLETO ===");
+  // 1. Tipos Numéricos e Texto
+  int i = 10;
+  float f = 2.5;
+  string s = "Texto";
 
-    // 1. Tipos Primitivos
-    print("--- Tipos Primitivos ---");
-    int i = 10;
-    float f = 3.14;
-    string s = "Ola Mundo";
-    print(i);
-    print(f);
-    print(s);
+  printf("Int: %d, Float: %f, String: %s\n", i, f, s);
 
-    // 2. Arrays
-    print("--- Arrays ---");
-    int arr[3];
-    arr[0] = 100;
-    arr[1] = 200;
-    arr[2] = 300;
-    print(arr[1]);
-    
-    // Inicialização em lote
-    int arr2[2] = {10, 20};
-    print(arr2[0] + arr2[1]);
+  // 2. Arrays e Inicialização
+  int arr[3] = {1, 2, 3};
+  printf("Array[1]: %d\n", arr[1]);
 
-    // 3. If-Else
-    print("--- If-Else ---");
-    if (i > 5) {
-        print("i maior que 5");
-    } else {
-        print("i menor ou igual a 5");
-    }
+  // 3. Controle de Fluxo
+  if (i > 5) {
+    puts("i maior que 5");
+  } else {
+    puts("i menor ou igual a 5");
+  }
 
-    if (i == 10) {
-        if (f < 4.0) {
-            print("i e 10 e f menor que 4.0");
-        }
-    }
+  int count = 0;
+  while (count < 3) {
+    printf("While count: %d\n", count);
+    count = count + 1;
+  }
 
-    // 4. Loops
-    print("--- Loops ---");
-    
-    print("For Loop:");
-    for (int k = 0; k < 3; k = k + 1) {
-        print(k);
-    }
+  do {
+    printf("Do-While count: %d\n", count);
+    count = count - 1;
+  } while (count > 0);
 
-    print("While Loop:");
-    int w = 0;
-    while (w < 3) {
-        print(w);
-        w = w + 1;
-    }
+  for (int k = 0; k < 3; k = k + 1) {
+    printf("For k: %d\n", k);
+  }
 
-    print("Do-While Loop:");
-    int d = 0;
-    do {
-        print(d);
-        d = d + 1;
-    } while (d < 3);
+  int val = 2;
+  switch (val) {
+  case 1:
+    puts("Case 1");
+    break;
+  case 2:
+    puts("Case 2");
+    break;
+  default:
+    puts("Default");
+  }
 
-    // 5. Switch
-    print("--- Switch ---");
-    int sw = 2;
-    switch (sw) {
-        case 1: 
-            print("Case 1");
-            break;
-        case 2:
-            print("Case 2");
-            break;
-        default:
-            print("Default");
-    }
-    
-    // 6. Break em Loop
-    print("--- Break ---");
-    for (int b = 0; b < 10; b = b + 1) {
-        if (b == 2) break;
-        print(b);
-    }
+  // 4. Operações Matemáticas e Lógicas
+  int res = (10 + 5) * 2;
+  printf("Math: %d\n", res);
 
-    print("=== FIM ===");
+  if (10 > 5 && 2 < 4) {
+    puts("Logica AND OK");
+  }
+
+  // 5. Funções
+  saudacao("Usuario");
+  int sres = soma(10, 20);
+  printf("Soma: %d\n", sres);
+  printf("Fatorial(5): %d\n", fatorial(5));
+
+  // 6. Structs
+  struct Point p;
+  p.x = 100;
+  p.y = 200;
+  printf("Struct Point: x=%d, y=%d\n", p.x, p.y);
+
+  // 7. Unions
+  union Data d;
+  d.i = 42;
+  printf("Union Int: %d\n", d.i);
+  d.f = 3.14;
+  printf("Union Float: %f\n", d.f);
+
+  // 8. IO e Conversores
+  // Simulação de input (scanf requer interação, vamos testar conversores)
+  string numStr = "123";
+  int num = stoi(numStr);
+  printf("STOI: %d\n", num + 1);
+
+  string floatStr = "12.5";
+  float fnum = stof(floatStr);
+  printf("STOF: %f\n", fnum + 0.5);
+
+  puts("Teste Concluido!");
 }
