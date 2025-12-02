@@ -2,15 +2,15 @@
 
 ## 📌 Visão Geral
 
-Este repositório contém a implementação de um compilador desenvolvido como *trabalho final da disciplina de Compiladores. O projeto utiliza a linguagem **Dart* e técnicas clássicas de compiladores, como *análise léxica* e *análise sintática*, aplicadas a partir de uma gramática formalizada.
+Este repositório contém a implementação de um interpretador desenvolvido como *trabalho final da disciplina de Compiladores. O projeto utiliza a linguagem **Dart* e técnicas clássicas de compiladores, como *análise léxica* e *análise sintática*, aplicadas a partir de uma gramática formalizada.
 
-O objetivo principal é aplicar, na prática, os conceitos estudados em sala de aula, construindo um compilador básico capaz de interpretar, validar e processar uma linguagem definida pelo grupo.
+O objetivo principal é aplicar, na prática, os conceitos estudados em sala de aula, construindo um interpretador básico capaz de interpretar, validar e processar uma linguagem definida pelo grupo.
 
 ---
 
 ## 🛠 Tecnologias e Ferramentas Utilizadas
 
-* *Dart* – Linguagem utilizada para implementar o compilador.
+* *Dart* – Linguagem utilizada para implementar o interpretador.
 * *ANTLR * – Para definição de tokens e regras gramaticais.
 
 ---
@@ -23,7 +23,7 @@ A estrutura do projeto está organizada da seguinte forma:
 trabalho-final-compiladores/
 │
 ├── bin/                → Arquivos principais para execução
-├── lib/                → Código-fonte do compilador
+├── lib/                → Código-fonte do interpretador
 ├── examples/           → Exemplos de código de entrada
 ├── test/               → Casos de teste
 ├── tool/               → Ferramentas auxiliares
@@ -39,7 +39,7 @@ trabalho-final-compiladores/
 
 ## ✅ Funcionalidades
 
-O compilador implementa as seguintes funcionalidades principais:
+O interpretador implementa as seguintes funcionalidades principais:
 
 * ✅ *Análise léxica* (tokenização do código)
 * ✅ *Análise sintática* (validação da estrutura da linguagem)
@@ -135,4 +135,5 @@ Repositório:
 ## 📄 Licença
 
 Este projeto está disponibilizado apenas para fins acadêmicos. Caso deseje utilizar parte do código em outros projetos, entre em contato com os autores.
+
 
