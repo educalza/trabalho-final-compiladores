@@ -11,9 +11,7 @@ O objetivo principal é aplicar, na prática, os conceitos estudados em sala de 
 ## 🛠 Tecnologias e Ferramentas Utilizadas
 
 * *Dart* – Linguagem utilizada para implementar o compilador.
-* *ANTLR (ou estrutura própria de análise)* – Para definição de tokens e regras gramaticais (dependendo da implementação adotada).
-* *Git e GitHub* – Controle de versão e colaboração.
-* *VS Code / IntelliJ / Terminal* – IDEs e ferramentas recomendadas para desenvolvimento.
+* *ANTLR * – Para definição de tokens e regras gramaticais.
 
 ---
 
@@ -57,7 +55,6 @@ O compilador implementa as seguintes funcionalidades principais:
 
 Certifique-se de ter o Dart instalado em sua máquina:
 
-bash
 dart --version
 
 
@@ -68,13 +65,11 @@ Caso não tenha, instale pelo site oficial:
 
 ### 2. Clonar o repositório
 
-bash
 git clone https://github.com/educalza/trabalho-final-compiladores.git
 
 
 Entre na pasta do projeto:
 
-bash
 cd trabalho-final-compiladores
 
 
@@ -82,7 +77,7 @@ cd trabalho-final-compiladores
 
 ### 3. Instalar as dependências
 
-bash
+
 dart pub get
 
 
@@ -92,17 +87,13 @@ dart pub get
 
 Dependendo do arquivo principal configurado em bin/, execute:
 
-bash
-dart run
+dart run bin/c_processor.dart examples/full_test.c
 
 
-Ou de forma mais explícita:
+Ou na forma REPL:
 
-bash
-dart run bin/main.dart
+dart run bin/c_processor.dart
 
-
-(Caso o nome do arquivo principal seja outro, substitua por ele.)
 
 ---
 
@@ -110,14 +101,12 @@ dart run bin/main.dart
 
 Na pasta examples/, você encontrará arquivos de exemplo. Para testar um deles:
 
-bash
-dart run bin/main.dart examples/nome_do_arquivo.txt
+dart run bin/c_processor.dart examples/full_test.c
 
 
 Exemplo:
 
-bash
-dart run bin/main.dart examples/teste1.txt
+dart run bin/c_processor.dart examples/test_ops.c
 
 
 O compilador realizará a análise e exibirá no terminal se a entrada é válida ou se possui erros léxicos/sintáticos.
@@ -126,26 +115,13 @@ O compilador realizará a análise e exibirá no terminal se a entrada é válid
 
 ## 🧪 Executando testes automatizados
 
-Se houver arquivos na pasta test/, você pode rodá-los com:
+Os arquivos na pasta test/, você pode rodá-los com:
 
-bash
 dart test
 
 
 ---
 
-## 📚 Conceitos Aplicados
-
-Este projeto demonstra a aplicação prática dos seguintes conceitos de Compiladores:
-
-* Tokens e Lexemas
-* Regex e padrões léxicos
-* Gramáticas livres de contexto (GLC)
-* Análise Top-Down / Bottom-Up
-* Símbolos terminais e não-terminais
-* Detecção e tratamento de erros
-
----
 
 ## 👨‍💻 Autores
 
@@ -160,6 +136,3 @@ Repositório:
 
 Este projeto está disponibilizado apenas para fins acadêmicos. Caso deseje utilizar parte do código em outros projetos, entre em contato com os autores.
 
----
-
-✅ *Dica:* Se você quiser, posso adaptar este README para a ABNT, inglês, ou incluir exemplos reais de código e prints do terminal.
